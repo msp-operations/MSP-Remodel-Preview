@@ -9,6 +9,13 @@
 <link rel="icon" type="image/png" href="msp-ui/favicon.png">
 <link rel="stylesheet" href="msp-ui/msp-ui.css">
 <style>
+  /* ── clean landing: no sidebar, everything centred ─────────────────────── */
+  body.hub{min-height:100vh;display:flex;flex-direction:column}
+  .hub-main{flex:1;display:flex;flex-direction:column;justify-content:center;max-width:1180px;width:100%;margin:0 auto;padding:40px 32px 24px;box-sizing:border-box}
+  .hub-top{display:flex;justify-content:center;margin-bottom:8px}
+  .hub-top img{height:26px;opacity:.85}
+  .hub-foot{text-align:center;font-size:11px;color:var(--msp-g4);padding:16px 24px 28px;line-height:1.7}
+  .hub-foot a{color:var(--msp-g5)}
   /* ── the ring: tiles around the emblem ───────────────────────────────── */
   .ring{display:flex;flex-direction:column;gap:14px;align-items:center;margin:8px 0 28px}
   .ring-row{display:flex;gap:14px;justify-content:center;flex-wrap:nowrap}
@@ -17,7 +24,7 @@
   .ring-centre{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:220px;padding:12px}
   .ring-centre img{width:min(100%,220px);height:auto;display:block;filter:drop-shadow(0 8px 24px rgba(1,27,60,.18))}
   .ring-centre .kicker{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-g4);margin-top:14px}
-  .ring-centre h1{font-size:22px;margin:4px 0 0;color:var(--msp-navy)}
+  .ring-centre h1{font-size:24px;margin:4px 0 0;color:var(--msp-navy);font-family:var(--msp-font-display)}
 
   /* ── a tile ────────────────────────────────────────────────────────────── */
   .tile{width:196px;min-height:118px;background:#fff;border:1.5px solid var(--msp-g2);border-radius:var(--msp-r);box-shadow:var(--msp-sh);padding:14px 16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--msp-g9);transition:all .2s;position:relative;box-sizing:border-box}
@@ -41,13 +48,6 @@
   .aud-alumni{background:var(--msp-b-bg);color:var(--msp-b)}
   .aud-supervisors{background:var(--msp-c-bg);color:var(--msp-c)}
 
-  /* ── below the ring ────────────────────────────────────────────────────── */
-  .about{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-  .about p{margin:0 0 10px;font-size:13px;color:var(--msp-g7);line-height:1.7}
-  .about p:last-child{margin:0}
-  .legend{display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--msp-g7)}
-  .legend span.msp-tag{min-width:84px;justify-content:center}
-
   /* ── narrow screens: emblem on top, tiles in a grid ───────────────────── */
   @media(max-width:1180px){.tile{width:176px}}
   @media(max-width:1000px){
@@ -56,39 +56,17 @@
     .ring{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:12px}
     .ring-centre{grid-column:1/-1;order:-1;padding:8px 0 16px}
     .tile{width:auto;min-height:0}
-    .about{grid-template-columns:1fr}
   }
   @media(max-width:480px){.ring{grid-template-columns:1fr 1fr}.tile-blurb{display:none}.tile{min-height:0}}
 </style>
 </head>
-<body>
+<body class="msp-body hub">
 
-<main class="msp-main wide">
+<main class="hub-main">
+  <div class="hub-top"><img src="msp-ui/um-wordmark.png" alt="Maastricht University" style="filter:brightness(0);opacity:.75"></div>
   <div class="ring" id="ring" aria-label="MSP tools"></div>
-
-  <div class="about">
-    <div class="msp-card static">
-      <div class="msp-card-h"><h2>What this is</h2></div>
-      <div class="msp-card-b">
-        <p>The Maastricht Science Programme runs a set of small web tools, each built for one job: answering student questions, planning courses, running the bachelor thesis, matching tutors to courses, keeping the office calendar, and staying in touch with alumni.</p>
-        <p>This page is the front door. Pick the tool you need and it opens in the same layout you see here, so nothing has to be learnt twice. Tools marked <em>in development</em> are not public yet.</p>
-      </div>
-    </div>
-    <div class="msp-card static">
-      <div class="msp-card-h"><h2>Who each tool is for</h2></div>
-      <div class="msp-card-b">
-        <div class="legend">
-          <div class="msp-row"><span class="msp-tag aud-students">Students</span> current MSP students</div>
-          <div class="msp-row"><span class="msp-tag aud-supervisors">Supervisors</span> thesis supervisors and advisors</div>
-          <div class="msp-row"><span class="msp-tag aud-staff">Staff</span> the MSP office and academic staff</div>
-          <div class="msp-row"><span class="msp-tag aud-alumni">Alumni</span> graduates of MSP and CE</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <footer class="msp-footer">Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University<br>Questions about a tool: <a href="mailto:msp-operations@maastrichtuniversity.nl">msp-operations@maastrichtuniversity.nl</a></footer>
 </main>
+<footer class="hub-foot">Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University<br>Questions about a tool: <a href="mailto:msp-operations@maastrichtuniversity.nl">msp-operations@maastrichtuniversity.nl</a></footer>
 
 <script src="projects.js"></script>
 <script src="msp-ui/msp-shell.js"></script>
@@ -108,7 +86,7 @@
       '<div class="tile-top"><span class="tile-ico">' + MSPShell.icon(p.icon) + '</span><span class="tile-name">' + p.name + '</span></div>' +
       '<div class="tile-blurb">' + p.blurb + '</div>' +
       '<div class="tile-foot"><span class="msp-tag aud-' + p.audience + '">' + (AUD[p.audience] || p.audience) + '</span>' +
-      (dev ? '<span class="msp-tag">in development</span>' : '<span class="tile-go">' + MSPShell.icon('external') + '</span>') + '</div>';
+      (dev ? '<span class="msp-tag">in development</span>' : '<span class="tile-go">' + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' + '</span>') + '</div>';
     return el;
   }
 
@@ -140,25 +118,6 @@
   }
   layout();
 
-  // sidebar: the same tools, grouped by audience
-  var groups = [['students', 'For students'], ['supervisors', 'For supervisors'], ['staff', 'For staff'], ['alumni', 'Alumni']];
-  var nav = [];
-  groups.forEach(function (g) {
-    var items = P.filter(function (p) { return p.audience === g[0]; });
-    if (!items.length) return;
-    nav.push({ label: g[1], group: true });
-    items.forEach(function (p) {
-      var href = p.next || p.live;
-      nav.push({ label: p.name, hint: href ? p.blurb : 'In development', href: href || ('#tool-' + p.id), icon: p.icon, external: !!href });
-    });
-  });
-  MSPShell.init({
-    title: 'MSP Hub',
-    hub: false,
-    home: 'index.html',
-    nav: nav,
-    footer: 'The front door to every MSP web tool.'
-  });
 })();
 </script>
 </body>
