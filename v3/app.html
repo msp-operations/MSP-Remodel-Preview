@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MSP Online</title>
+<meta name="theme-color" content="#011B3C">
+<link rel="icon" type="image/png" href="msp-ui/favicon.png">
+<link rel="stylesheet" href="msp-ui/msp-ui.css">
+<style>
+  /* Version 3: one side nav, the original websites beside it. Each tool lives in its own frame,
+     created the first time you open it and kept afterwards, so switching back is instant and the
+     tool keeps where you were. The frames are the real sites; nothing in them is restyled. */
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--msp-g0)}
+  body{font-family:var(--msp-font)}
+  .msp-sidebar{view-transition-name:none}
+  .v3-kicker{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-sky);opacity:.9;margin-top:2px}
+  .v3-title{font-family:var(--msp-font-display);font-size:20px;font-weight:700;letter-spacing:-.02em;color:#fff;margin-top:2px}
+  .msp-sb-link .v3-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--msp-sky);opacity:0;transition:opacity .3s;flex-shrink:0}
+  .msp-sb-link.loaded .v3-dot{opacity:.55}
+  .msp-sb-link.active .v3-dot{opacity:0}
+  .v3-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+
+  .v3-stage{position:fixed;top:0;right:0;bottom:0;left:var(--msp-sb-w);background:#fff}
+  .v3-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;opacity:0;visibility:hidden;transition:opacity .25s ease}
+  .v3-stage iframe.on{opacity:1;visibility:visible}
+  .v3-bar{position:absolute;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--msp-sky),var(--msp-orange));z-index:5;transition:width .6s cubic-bezier(.2,.7,.2,1),opacity .3s;opacity:0}
+  .v3-bar.go{opacity:1;width:70%}
+  .v3-bar.done{width:100%;opacity:0;transition:width .2s,opacity .4s .2s}
+
+  /* phone and small tablet: a slim navy top bar with the tool name, the side nav as a drawer */
+  .v3-top{display:none}
+  @media(max-width:1100px){.v3-stage{left:var(--msp-sb-w-md)}}
+  @media(max-width:900px){
+    .v3-top{display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;height:52px;padding:0 12px;background:var(--msp-navy);color:#fff;z-index:150;box-shadow:0 2px 12px rgba(1,27,60,.25)}
+    .v3-top button{width:36px;height:36px;border-radius:9px;border:0;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .v3-top button svg{width:18px;height:18px}
+    .v3-top .t{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+    .v3-top .t small{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-sky)}
+    .v3-top .t b{font-family:var(--msp-font-display);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v3-stage{left:0;top:52px}
+    .msp-sb-toggle{display:none!important}
+  }
+</style>
+</head>
+<body class="msp-body">
+
+<aside class="msp-sidebar" id="msp-sidebar" aria-label="MSP tools">
+  <div class="msp-sb-brand">
+    <a id="hubLogo" href="index.html" title="All tools"><img src="msp-ui/um-wordmark.png" alt="Maastricht University" class="msp-sb-logo"></a>
+    <div class="v3-kicker" id="kicker"></div>
+    <div class="v3-title" id="title"></div>
+  </div>
+  <nav class="msp-sb-nav" aria-label="Tools">
+    <div class="msp-sb-label">Tools</div>
+    <div id="toolNav"></div>
+    <div class="msp-sb-divider"></div>
+    <a class="msp-sb-link" id="hubLink" href="index.html"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
+    <a class="msp-sb-link" id="otherLink" href="#"><span class="msp-sb-ico" id="otherIco"></span><span class="msp-sb-text" id="otherText"></span></a>
+  </nav>
+  <div class="msp-sb-meta v3-actions">
+    <span id="nowShowing"></span>
+    <a class="msp-sb-cfg" id="newTab" href="#" target="_blank" rel="noopener"></a>
+  </div>
+  <div class="msp-sb-footer">
+    <img class="msp-sb-emblem" src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
+    <div class="msp-sb-privacy">Each tool opens as its own website. Your place in a tool is kept while you switch.</div>
+  </div>
+</aside>
+<div class="msp-sb-overlay" id="overlay"></div>
+
+<header class="v3-top">
+  <button type="button" id="menuBtn" aria-label="Open the tool menu" aria-controls="msp-sidebar" aria-expanded="false"></button>
+  <div class="t"><small id="topKicker"></small><b id="topTitle"></b></div>
+</header>
+
+<main class="v3-stage" id="stage" aria-live="polite">
+  <div class="v3-bar" id="bar"></div>
+</main>
+
+<script src="tools.js"></script>
+<script src="msp-ui/msp-shell.js"></script>
+<script>
+(function () {
+  var V = window.V3, I = MSPShell.icon;
+  var q = new URLSearchParams(location.search);
+  var key = q.get('s') === 'staff' ? 'staff' : 'students';
+  var S = V.suites[key], O = V.suites[S.other];
+  var tools = S.tools, frames = {}, current = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var appUrl = function (k) { return 'app.html' + (k === 'staff' ? '?s=staff' : ''); };
+
+  // static parts of the nav
+  $('kicker').textContent = V.name + ' · ' + S.label;
+  $('topKicker').textContent = V.name + ' · ' + S.label;
+  $('hubLogo').href = S.hub; $('hubLink').href = S.hub;
+  $('hubIco').innerHTML = I('hub');
+  $('hubText').innerHTML = 'All ' + (key === 'staff' ? 'staff' : 'student') + ' tools<span class="msp-sb-hint">Back to the overview</span>';
+  $('otherLink').href = appUrl(S.other);
+  $('otherIco').innerHTML = I(key === 'staff' ? 'gradcap' : 'briefcase');
+  $('otherText').innerHTML = S.otherLabel + '<span class="msp-sb-hint">Switch to the ' + O.label.toLowerCase() + ' side</span>';
+  $('menuBtn').innerHTML = I('menu');
+  $('toolNav').innerHTML = tools.map(function (t) {
+    return '<a class="msp-sb-link" data-id="' + t.id + '" href="#' + t.id + '">' +
+      '<span class="msp-sb-ico">' + I(t.icon) + '</span>' +
+      '<span class="msp-sb-text">' + t.name + '<span class="msp-sb-hint">' + t.hint + '</span></span>' +
+      '<span class="v3-dot" title="Open in the background"></span></a>';
+  }).join('');
+
+  var bar = $('bar'), barT;
+  function loading(on) {
+    clearTimeout(barT);
+    if (on) { bar.className = 'v3-bar'; void bar.offsetWidth; bar.className = 'v3-bar go'; }
+    else { bar.className = 'v3-bar go done'; barT = setTimeout(function () { bar.className = 'v3-bar'; }, 700); }
+  }
+
+  function frameFor(t, visible) {
+    if (frames[t.id]) return frames[t.id];
+    var f = document.createElement('iframe');
+    f.title = t.name; f.src = t.url; f.setAttribute('allow', 'clipboard-write; fullscreen');
+    f.addEventListener('load', function () {
+      var a = document.querySelector('.msp-sb-link[data-id="' + t.id + '"]'); if (a) a.classList.add('loaded');
+      if (current === t.id) loading(false);
+    });
+    $('stage').appendChild(f); frames[t.id] = f;
+    if (visible) loading(true);
+    return f;
+  }
+
+  function show(id) {
+    var t = tools.filter(function (x) { return x.id === id; })[0] || tools[0];
+    if (current === t.id) return;
+    current = t.id;
+    var f = frameFor(t, true);
+    Object.keys(frames).forEach(function (k) { frames[k].classList.toggle('on', k === t.id); });
+    document.querySelectorAll('#toolNav .msp-sb-link').forEach(function (a) {
+      var on = a.getAttribute('data-id') === t.id;
+      a.classList.toggle('active', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    $('title').textContent = t.name; $('topTitle').textContent = t.name;
+    document.title = t.name + ' · ' + V.name;
+    $('nowShowing').textContent = 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/^sites\//, 'MSP Online/');
+    $('newTab').href = t.url; $('newTab').innerHTML = I('external') + ' Open in a new tab';
+    try { sessionStorage.setItem('v3-' + key, t.id); } catch (e) {}
+    closeMenu();
+  }
+
+  // menu drawer (phone)
+  var aside = $('msp-sidebar'), overlay = $('overlay');
+  function openMenu() { aside.classList.add('open'); overlay.classList.add('show'); $('menuBtn').setAttribute('aria-expanded', 'true'); $('menuBtn').innerHTML = I('x'); }
+  function closeMenu() { aside.classList.remove('open'); overlay.classList.remove('show'); $('menuBtn').setAttribute('aria-expanded', 'false'); $('menuBtn').innerHTML = I('menu'); }
+  $('menuBtn').addEventListener('click', function () { aside.classList.contains('open') ? closeMenu() : openMenu(); });
+  overlay.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  var start = location.hash.slice(1);
+  if (!start) { try { start = sessionStorage.getItem('v3-' + key) || ''; } catch (e) {} }
+  show(start || tools[0].id);
+  if (location.hash.slice(1) !== current) history.replaceState(null, '', '#' + current);
+
+  // once the first tool is up, quietly open the others so every switch is instant
+  var warmed = false;
+  frames[current].addEventListener('load', function () {
+    if (warmed) return; warmed = true;
+    var queue = tools.filter(function (t) { return t.id !== current; });
+    (function next() {
+      var t = queue.shift(); if (!t) return;
+      var f = frameFor(t, false); f.addEventListener('load', function () { setTimeout(next, 300); }, { once: true });
+    })();
+  });
+})();
+</script>
+</body>
+</html>
