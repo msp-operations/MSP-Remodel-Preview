@@ -1,0 +1,73 @@
+{
+  "meta": {
+    "title": "MSP Student FAQ",
+    "ay": "2026-2027",
+    "generated": "2026-08-18",
+    "count": 382
+  },
+  "notes": [
+    {
+      "id": "everything-on-my-to-do-list-in-the-application-portal-is-tic",
+      "q": "Everything on my to-do list in the application portal is ticked. Am I finished?",
+      "topic": "Getting In",
+      "office": "admissions",
+      "note": "a student asked in the 13 Aug 2026 Q&A whether the certified diploma copy still has to be re-uploaded through the student portal when Admissions already received it directly from the school. Nobody answered it in the session. Worth confirming with Admissions and writing the answer in here, since that situation is common for schools that send transcripts themselves."
+    },
+    {
+      "id": "where-is-the-programme-held-and-how-do-i-get-into-the-buildi",
+      "q": "Where is the programme held, and how do I get into the buildings?",
+      "topic": "Getting Started",
+      "office": "intro",
+      "note": "two things to confirm here. First, whether every day of the Introduction Days starts at PHS1, since a student asked exactly this in the 13 Aug 2026 Q&A and nobody answered. Second, the Gaetano Martinolaan main entrance, which Chris gave in that chat; you are in the building daily so a one-line correction is enough if it is wrong."
+    },
+    {
+      "id": "i-cannot-see-the-msp-course-for-new-students-on-canvas-what-",
+      "q": "I cannot see the MSP course for new students on Canvas. What should I do?",
+      "topic": "Getting Started",
+      "office": "intro",
+      "note": "in the 13 Aug 2026 Q&A this course was called \"MSP1000\" and the link given was Canvas course 31239, while the rest of this FAQ consistently points students at Canvas 3711 (MSP-students). Confirm whether MSP1000 / 31239 is a separate intake course worth naming here by number, or whether new students should just be sent to 3711."
+    },
+    {
+      "id": "can-i-learn-dutch-while-i-study-here",
+      "q": "Can I learn Dutch while I study here?",
+      "topic": "Getting Started",
+      "office": "intro",
+      "note": "paste the exact Language Centre course-offer URL here. Gianfranco posted it in the 13 Aug 2026 Q&A (\"Offer language courses | Maastricht University Language Centre\") and it should be in that chat. I did not want to guess a UM URL into a published answer."
+    },
+    {
+      "id": "what-are-the-switch-and-withdrawal-deadlines-for-the-current",
+      "q": "What are the Switch and Withdrawal Deadlines for the current Academic Year?",
+      "topic": "Courses & Registration",
+      "office": "esd",
+      "note": "the P2 switch deadline of 29 Sep 2026 is a Tuesday while the other three are Fridays, so it may be a typo for Fri 25 Sep. Check against \"Switch and withdraw deadlines Academic Year 2026 2027.docx\". Note the previously stated rule of \"the Friday before the period\" was wrong for all four periods and has been removed here; the KB Academic Year Calendar still carries it and needs the same correction."
+    },
+    {
+      "id": "i-would-like-to-register-for-an-external-module-how-do-i-pro",
+      "q": "I would like to register for an External Module, how do I proceed?",
+      "topic": "Courses & Registration",
+      "office": "esd",
+      "note": "all six of these dates are Sundays, which suggests the source lists week-ending dates rather than office cut-offs. Confirm whether the real deadline is the Friday before, so students are not told to submit on a day nobody is processing."
+    },
+    {
+      "id": "can-you-sign-my-grant-benefit-or-financial-aid-form-baf-g-ki",
+      "q": "Can you sign my grant, benefit or financial-aid form (BAföG, Kindergeld, DUO, and similar)?",
+      "topic": "Money & Practical",
+      "office": "ssc",
+      "note": "confirm whether any of these forms are signed by the SSC rather than ESD, so the split can be stated exactly."
+    },
+    {
+      "id": "is-my-first-semester-the-same-for-everyone-and-when-do-i-fir",
+      "q": "Is my first semester the same for everyone, and when do I first choose my own courses?",
+      "topic": "Courses & Registration",
+      "office": "aa",
+      "note": "Chris put this as \"same for everyone until 31 January\" in the 13 Aug 2026 Q&A, and the rest of this FAQ says registration runs ahead of November and May. Confirm the two line up for first-years (register in November, first free semester starts end of January) before this goes out, and give the exact semester 2 start date if you want it named."
+    },
+    {
+      "id": "what-is-the-lab-safety-training-and-what-happens-if-i-miss-i",
+      "q": "What is the lab safety training, and what happens if I miss it or do not pass?",
+      "topic": "Getting Started",
+      "office": "msp",
+      "note": "in the 13 Aug 2026 Q&A, Annelies said the resit would \"very likely\" be the Monday afternoon of the first education week (31 Aug 2026) but explicitly did not confirm it, and Kathia said only that it would be arranged once numbers were known. Check with the lab coordinator whether the resit always sits in the first education week. If it does, name that here, because it is the reassurance the question is really asking for."
+    }
+  ]
+}

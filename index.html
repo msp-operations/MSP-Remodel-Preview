@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MSP Hub</title>
+<meta name="description" content="Every Maastricht Science Programme web tool in one place: student FAQ, course planner, thesis research, tutoring, calendars and the alumni networks.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="msp-ui/favicon.png">
+<link rel="stylesheet" href="msp-ui/msp-ui.css">
+<style>
+  /* ── the ring: tiles around the emblem ───────────────────────────────── */
+  .ring{display:flex;flex-direction:column;gap:14px;align-items:center;margin:8px 0 28px}
+  .ring-row{display:flex;gap:14px;justify-content:center;flex-wrap:nowrap}
+  .ring-mid{display:flex;gap:14px;align-items:stretch;justify-content:center;width:100%}
+  .ring-col{display:flex;flex-direction:column;gap:14px;justify-content:space-between}
+  .ring-centre{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:220px;padding:12px}
+  .ring-centre img{width:min(100%,220px);height:auto;display:block;filter:drop-shadow(0 8px 24px rgba(1,27,60,.18))}
+  .ring-centre .kicker{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-g4);margin-top:14px}
+  .ring-centre h1{font-size:22px;margin:4px 0 0;color:var(--msp-navy)}
+
+  /* ── a tile ────────────────────────────────────────────────────────────── */
+  .tile{width:196px;min-height:118px;background:#fff;border:1.5px solid var(--msp-g2);border-radius:var(--msp-r);box-shadow:var(--msp-sh);padding:14px 16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--msp-g9);transition:all .2s;position:relative;box-sizing:border-box}
+  .tile:hover{box-shadow:var(--msp-sh-md);transform:translateY(-2px);border-color:var(--msp-g3)}
+  .tile:focus-visible{outline:2px solid var(--msp-sky);outline-offset:2px}
+  .tile-top{display:flex;align-items:center;gap:10px}
+  .tile-ico{width:34px;height:34px;border-radius:9px;background:var(--msp-a-bg);color:var(--msp-navy);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .tile-ico svg{width:18px;height:18px}
+  .tile-name{font-family:var(--msp-font-display);font-weight:700;font-size:14px;letter-spacing:-.01em;line-height:1.2}
+  .tile-blurb{font-size:11.5px;color:var(--msp-g5);line-height:1.45;flex:1}
+  .tile-foot{display:flex;align-items:center;gap:6px;margin-top:2px}
+  .tile-foot .msp-tag{font-size:9px;padding:2px 7px}
+  .tile-go{margin-left:auto;color:var(--msp-g4);display:flex}
+  .tile-go svg{width:14px;height:14px}
+  .tile:hover .tile-go{color:var(--msp-navy)}
+  .tile.dev{border-style:dashed;background:var(--msp-g0);cursor:default}
+  .tile.dev:hover{transform:none;box-shadow:var(--msp-sh);border-color:var(--msp-g2)}
+  .tile.dev .tile-ico{background:var(--msp-g1);color:var(--msp-g4)}
+  .aud-students{background:var(--msp-a-bg);color:var(--msp-a)}
+  .aud-staff{background:var(--msp-d-bg);color:var(--msp-d)}
+  .aud-alumni{background:var(--msp-b-bg);color:var(--msp-b)}
+  .aud-supervisors{background:var(--msp-c-bg);color:var(--msp-c)}
+
+  /* ── below the ring ────────────────────────────────────────────────────── */
+  .about{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  .about p{margin:0 0 10px;font-size:13px;color:var(--msp-g7);line-height:1.7}
+  .about p:last-child{margin:0}
+  .legend{display:flex;flex-direction:column;gap:8px;font-size:12.5px;color:var(--msp-g7)}
+  .legend span.msp-tag{min-width:84px;justify-content:center}
+
+  /* ── narrow screens: emblem on top, tiles in a grid ───────────────────── */
+  @media(max-width:1180px){.tile{width:176px}}
+  @media(max-width:1000px){
+    .ring-row,.ring-mid{display:contents}
+    .ring-col{display:contents}
+    .ring{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:12px}
+    .ring-centre{grid-column:1/-1;order:-1;padding:8px 0 16px}
+    .tile{width:auto;min-height:0}
+    .about{grid-template-columns:1fr}
+  }
+  @media(max-width:480px){.ring{grid-template-columns:1fr 1fr}.tile-blurb{display:none}.tile{min-height:0}}
+</style>
+</head>
+<body>
+
+<main class="msp-main wide">
+  <div class="ring" id="ring" aria-label="MSP tools"></div>
+
+  <div class="about">
+    <div class="msp-card static">
+      <div class="msp-card-h"><h2>What this is</h2></div>
+      <div class="msp-card-b">
+        <p>The Maastricht Science Programme runs a set of small web tools, each built for one job: answering student questions, planning courses, running the bachelor thesis, matching tutors to courses, keeping the office calendar, and staying in touch with alumni.</p>
+        <p>This page is the front door. Pick the tool you need and it opens in the same layout you see here, so nothing has to be learnt twice. Tools marked <em>in development</em> are not public yet.</p>
+      </div>
+    </div>
+    <div class="msp-card static">
+      <div class="msp-card-h"><h2>Who each tool is for</h2></div>
+      <div class="msp-card-b">
+        <div class="legend">
+          <div class="msp-row"><span class="msp-tag aud-students">Students</span> current MSP students</div>
+          <div class="msp-row"><span class="msp-tag aud-supervisors">Supervisors</span> thesis supervisors and advisors</div>
+          <div class="msp-row"><span class="msp-tag aud-staff">Staff</span> the MSP office and academic staff</div>
+          <div class="msp-row"><span class="msp-tag aud-alumni">Alumni</span> graduates of MSP and CE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="msp-footer">Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University<br>Questions about a tool: <a href="mailto:msp-operations@maastrichtuniversity.nl">msp-operations@maastrichtuniversity.nl</a></footer>
+</main>
+
+<script src="projects.js"></script>
+<script src="msp-ui/msp-shell.js"></script>
+<script>
+(function () {
+  var P = window.MSP_PROJECTS || [];
+  var AUD = { students: 'Students', staff: 'Staff', alumni: 'Alumni', supervisors: 'Supervisors' };
+
+  function tile(p) {
+    var href = p.next || p.live;
+    var dev = p.status === 'dev' || !href;
+    var el = document.createElement(dev ? 'div' : 'a');
+    el.className = 'tile' + (dev ? ' dev' : '');
+    el.id = 'tool-' + p.id;
+    if (!dev) { el.href = href; el.setAttribute('aria-label', p.name + ': ' + p.blurb); }
+    el.innerHTML =
+      '<div class="tile-top"><span class="tile-ico">' + MSPShell.icon(p.icon) + '</span><span class="tile-name">' + p.name + '</span></div>' +
+      '<div class="tile-blurb">' + p.blurb + '</div>' +
+      '<div class="tile-foot"><span class="msp-tag aud-' + p.audience + '">' + (AUD[p.audience] || p.audience) + '</span>' +
+      (dev ? '<span class="msp-tag">in development</span>' : '<span class="tile-go">' + MSPShell.icon('external') + '</span>') + '</div>';
+    return el;
+  }
+
+  // ring layout: s tiles down each side, the rest split over the top and bottom rows
+  function layout() {
+    var ring = document.getElementById('ring');
+    ring.innerHTML = '';
+    var n = P.length;
+    var s = Math.max(1, Math.floor(n / 5));
+    var m = n - 2 * s, top = Math.ceil(m / 2), bottom = Math.floor(m / 2);
+    var i = 0;
+    var rowTop = document.createElement('div'); rowTop.className = 'ring-row';
+    for (var a = 0; a < top; a++) rowTop.appendChild(tile(P[i++]));
+    var mid = document.createElement('div'); mid.className = 'ring-mid';
+    var right = document.createElement('div'); right.className = 'ring-col';
+    for (var b = 0; b < s; b++) right.appendChild(tile(P[i++]));
+    var rowBottom = document.createElement('div'); rowBottom.className = 'ring-row';
+    var bottomTiles = [];
+    for (var c = 0; c < bottom; c++) bottomTiles.push(tile(P[i++]));
+    bottomTiles.reverse().forEach(function (t) { rowBottom.appendChild(t); });   // keeps the clockwise order
+    var left = document.createElement('div'); left.className = 'ring-col';
+    var leftTiles = [];
+    for (var d = 0; d < s; d++) leftTiles.push(tile(P[i++]));
+    leftTiles.reverse().forEach(function (t) { left.appendChild(t); });
+    var centre = document.createElement('div'); centre.className = 'ring-centre';
+    centre.innerHTML = '<img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme"><div class="kicker">Maastricht Science Programme</div><h1>All MSP tools, one place</h1>';
+    mid.appendChild(left); mid.appendChild(centre); mid.appendChild(right);
+    ring.appendChild(rowTop); ring.appendChild(mid); ring.appendChild(rowBottom);
+  }
+  layout();
+
+  // sidebar: the same tools, grouped by audience
+  var groups = [['students', 'For students'], ['supervisors', 'For supervisors'], ['staff', 'For staff'], ['alumni', 'Alumni']];
+  var nav = [];
+  groups.forEach(function (g) {
+    var items = P.filter(function (p) { return p.audience === g[0]; });
+    if (!items.length) return;
+    nav.push({ label: g[1], group: true });
+    items.forEach(function (p) {
+      var href = p.next || p.live;
+      nav.push({ label: p.name, hint: href ? p.blurb : 'In development', href: href || ('#tool-' + p.id), icon: p.icon, external: !!href });
+    });
+  });
+  MSPShell.init({
+    title: 'MSP Hub',
+    hub: false,
+    home: 'index.html',
+    nav: nav,
+    footer: 'The front door to every MSP web tool.'
+  });
+})();
+</script>
+</body>
+</html>
