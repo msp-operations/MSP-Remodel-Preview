@@ -140,7 +140,7 @@
     });
     $('title').textContent = t.name; $('topTitle').textContent = t.name;
     document.title = t.name + ' · ' + V.name;
-    $('nowShowing').textContent = 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '').replace(/^sites\//, 'MSP Online/');
+    $('nowShowing').textContent = /^https?:/.test(t.url) ? 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'Original copy, not published yet';
     $('newTab').href = t.url; $('newTab').innerHTML = I('external') + ' Open in a new tab';
     try { sessionStorage.setItem('v3-' + key, t.id); } catch (e) {}
     closeMenu();
