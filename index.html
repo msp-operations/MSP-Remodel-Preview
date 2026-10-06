@@ -39,7 +39,7 @@
   .orbit ellipse.o3{stroke:rgba(255,255,255,.05)}
 
   .core{position:relative;z-index:2;text-align:center;width:440px;pointer-events:none}
-  .core img{width:188px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);opacity:.96}
+  .core img{view-transition-name:msp-emblem;width:188px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);opacity:.96}
   .core .glow{position:absolute;left:50%;top:94px;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;
     background:radial-gradient(circle, rgba(110,210,236,.16) 0%, rgba(110,210,236,0) 65%);z-index:-1}
   .core h1{font-family:var(--msp-font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15}
@@ -120,6 +120,7 @@
 <script>
 (function () {
   var HUBKEY = window.MSP_HUB || 'students';
+  if (MSPShell.rememberSuite) MSPShell.rememberSuite(HUBKEY);
   var HUB = (window.MSP_HUBS || {})[HUBKEY] || { title: '', line: '' };
   var P = (window.MSP_PROJECTS || []).filter(function (p) { return (p.hubs || []).indexOf(HUBKEY) >= 0; });
   document.getElementById('kicker').textContent = HUB.title;
