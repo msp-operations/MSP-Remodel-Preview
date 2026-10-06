@@ -63,7 +63,7 @@
   .hero h1 em{font-style:normal;color:var(--msp-sky)}
   .hero p.lead{max-width:60ch;margin:0 auto;font-size:15px;opacity:.78;line-height:1.7}
 
-  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px}
+  .choice-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))!important;display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px}
   @media (max-width:760px){.choice-grid{grid-template-columns:1fr}}
   .choice{display:block;border:1px solid var(--line);border-radius:var(--radius);padding:28px 28px 26px;background:#fff;box-shadow:var(--msp-sh);transition:all .2s;position:relative;overflow:hidden}
   .choice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .25s}
@@ -108,8 +108,8 @@
     </svg>
     <div class="hero-inner">
       <div class="eyebrow"><span class="dot"></span> Bachelor Thesis Research · Maastricht Science Programme</div>
-      <h1>Bachelor Thesis<br>Research <em>Projects</em></h1>
-      <p class="lead">The central hub for Bachelor Thesis Research projects at the Maastricht Science Programme. Supervisors share opportunities; students discover them.</p>
+      <h1>Bachelor Thesis Research<br>for <em>Supervisors</em></h1>
+      <p class="lead">Offer a project to MSP students and find everything about your role as research supervisor or internal advisor.</p>
     </div>
   </section>
 
@@ -118,20 +118,31 @@
       <div class="ico">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg>
       </div>
-      <h2>For supervisors</h2>
+      <h2>Offer a project</h2>
       <p>Propose a new BTR project for MSP students. A short, structured form sends your proposal directly to the BTR office.</p>
       <span class="arrow">Submit a project
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </span>
     </a>
 
-    <a class="choice" href="projects.html">
+    <a class="choice" href="supervisor-btr-overview.html">
       <div class="ico">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
       </div>
-      <h2>For students</h2>
-      <p>Browse research projects offered by MSP supervisors and partner institutions. Filter by discipline, type, and topic to find your thesis.</p>
-      <span class="arrow">Browse projects
+      <h2>What is the BTR?</h2>
+      <p>The Bachelor Thesis Research in brief: structure, timeline, assessment and what students deliver.</p>
+      <span class="arrow">Read the overview
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <a class="choice" href="supervisor-role.html">
+      <div class="ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h2>Your role</h2>
+      <p>What is expected of a research supervisor and of an internal advisor, step by step.</p>
+      <span class="arrow">Research supervisor
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </span>
     </a>
@@ -148,13 +159,16 @@
 <script src="assets/msp-ui/msp-shell.js"></script>
 <script>
   MSPShell.init({
-    title: 'BTR Projects',
+    title: 'BTR for Supervisors',
     nav: [
-      { label: 'Home',            href: 'index.html',    icon: 'home', hint: 'Start here' },
-      { label: 'For Students',    hint: 'Browse projects',  href: 'projects.html', icon: 'book' },
-      { label: 'For Supervisors', hint: 'Submit a project', href: 'submit.html',   icon: 'briefcase' },
+      { label: 'Supervisors', group: true },
+      { label: 'Home', href: 'index.html', icon: 'home', hint: 'BTR for supervisors' },
+      { label: 'Offer a project', href: 'submit.html', icon: 'edit', hint: 'Submit a BTR project' },
+      { label: 'What is the BTR?', href: 'supervisor-btr-overview.html', icon: 'info', hint: 'The programme in brief' },
+      { label: 'Research supervisor', href: 'supervisor-role.html', icon: 'users', hint: 'Your role and tasks' },
+      { label: 'Internal advisor', href: 'internal-advisor-role.html', icon: 'shield', hint: 'Your role and tasks' },
       { divider: true },
-      { label: 'Contact',         href: 'mailto:msp-btr@maastrichtuniversity.nl', icon: 'mail', external: true }
+      { label: 'Contact the BTR office', href: 'mailto:msp-btr@maastrichtuniversity.nl', icon: 'mail', external: true }
     ],
     footer: 'Bachelor Thesis Research, Maastricht Science Programme.'
   });

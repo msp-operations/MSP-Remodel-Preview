@@ -1,5 +1,6 @@
 /* ============================================
-   BTR Dashboard - shared frame + page helpers
+   BTR for Supervisors - shared frame for the supervisor pages
+   (copied from the BTR Dashboard's nav.js on 6 Oct 2026; same helpers, supervisor nav)
    --------------------------------------------
    Loaded at the end of every page, AFTER
    assets/msp-ui/msp-shell.js. It:
@@ -16,29 +17,19 @@
    ============================================ */
 (function () {
     var NAV = [
-        { label: 'Students', group: true },
-        { label: 'Home', href: 'index.html', icon: 'home', hint: 'BTR at a glance' },
-        { label: 'Before you start', href: 'before-you-start.html', icon: 'compass' },
-        { label: 'Browse projects', href: 'browse-projects.html', icon: 'search', hint: 'Find your thesis project' },
-        { label: 'Writing the proposal', href: 'writing-the-proposal.html', icon: 'edit' },
-        { label: 'Writing the thesis', href: 'writing-the-thesis.html', icon: 'filetext' },
-        { label: 'Video guidelines', href: 'btr-video.html', icon: 'video' },
-        { label: 'Assessment rubrics', href: 'rubrics.html', icon: 'check' },
-        { label: 'FAQ', href: 'faq.html', icon: 'help' },
-        { label: 'Cohorts', group: true },
-        { label: 'September 2026', href: 'september-cohort-2026.html', icon: 'calendar', hint: 'Dashboard and timeline' },
-        { label: 'February 2027', href: 'february-cohort-2027.html', icon: 'calendar', hint: 'Dashboard and timeline' },
+        { label: 'Supervisors', group: true },
+        { label: 'Home', href: 'index.html', icon: 'home', hint: 'BTR for supervisors' },
+        { label: 'Offer a project', href: 'submit.html', icon: 'edit', hint: 'Submit a BTR project' },
+        { label: 'What is the BTR?', href: 'supervisor-btr-overview.html', icon: 'info', hint: 'The programme in brief' },
+        { label: 'Research supervisor', href: 'supervisor-role.html', icon: 'users', hint: 'Your role and tasks' },
+        { label: 'Internal advisor', href: 'internal-advisor-role.html', icon: 'shield', hint: 'Your role and tasks' },
         { divider: true },
         { label: 'Contact the BTR office', href: 'mailto:msp-btr@maastrichtuniversity.nl', icon: 'mail', external: true }
     ];
 
     /* Sub-pages highlight their parent entry. The body attribute wins,
        then window.BTR_PAGE, then this fallback map. */
-    var PARENT = {
-        'timeline-september.html': 'september-cohort-2026.html',
-        'timeline-february.html': 'february-cohort-2027.html',
-        '404.html': 'index.html'
-    };
+    var PARENT = {};
 
     var path = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
     var page = window.BTR_PAGE || {};
@@ -46,7 +37,7 @@
 
     if (window.MSPShell) {
         MSPShell.init({
-            title: 'BTR Dashboard',
+            title: 'BTR for Supervisors',
             home: 'index.html',
             nav: NAV,
             active: active || undefined,
@@ -58,18 +49,9 @@
 
     /* --- Breadcrumb kicker (inside the hero, above the title) --- */
     var breadcrumbMap = {
-        'february-cohort-2027.html': ['February 2027 Cohort'],
-        'september-cohort-2026.html': ['September 2026 Cohort'],
-        'before-you-start.html': ['Before You Start'],
-        'writing-the-proposal.html': ['Writing the Proposal'],
-        'writing-the-thesis.html': ['Writing the Thesis'],
-        'btr-video.html': ['BTR Video'],
-        'timeline-february.html': ['February 2027 Cohort|february-cohort-2027.html', 'Timeline'],
-        'timeline-september.html': ['September 2026 Cohort|september-cohort-2026.html', 'Timeline'],
-        'faq.html': ['FAQ'],
-        'rubrics.html': ['Assessment Rubrics'],
-        'browse-projects.html': ['Browse Projects']
-
+        'supervisor-role.html': ['Research Supervisor'],
+        'internal-advisor-role.html': ['Internal Advisor'],
+        'supervisor-btr-overview.html': ['What is the BTR?']
     };
     var crumbs = breadcrumbMap[path];
     if (crumbs && hero && !hero.querySelector('.btr-crumbs')) {

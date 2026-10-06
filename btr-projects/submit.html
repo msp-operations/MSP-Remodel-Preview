@@ -469,13 +469,16 @@
 <script src="assets/msp-ui/msp-shell.js"></script>
 <script>
   MSPShell.init({
-    title: 'BTR Projects',
+    title: 'BTR for Supervisors',
     nav: [
-      { label: 'Home',            href: 'index.html',    icon: 'home', hint: 'Start here' },
-      { label: 'For Students',    hint: 'Browse projects',  href: 'projects.html', icon: 'book' },
-      { label: 'For Supervisors', hint: 'Submit a project', href: 'submit.html',   icon: 'briefcase' },
+      { label: 'Supervisors', group: true },
+      { label: 'Home', href: 'index.html', icon: 'home', hint: 'BTR for supervisors' },
+      { label: 'Offer a project', href: 'submit.html', icon: 'edit', hint: 'Submit a BTR project' },
+      { label: 'What is the BTR?', href: 'supervisor-btr-overview.html', icon: 'info', hint: 'The programme in brief' },
+      { label: 'Research supervisor', href: 'supervisor-role.html', icon: 'users', hint: 'Your role and tasks' },
+      { label: 'Internal advisor', href: 'internal-advisor-role.html', icon: 'shield', hint: 'Your role and tasks' },
       { divider: true },
-      { label: 'Contact',         href: 'mailto:msp-btr@maastrichtuniversity.nl', icon: 'mail', external: true }
+      { label: 'Contact the BTR office', href: 'mailto:msp-btr@maastrichtuniversity.nl', icon: 'mail', external: true }
     ],
     footer: 'Bachelor Thesis Research, Maastricht Science Programme.'
   });
