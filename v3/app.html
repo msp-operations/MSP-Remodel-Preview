@@ -31,7 +31,24 @@
 
   /* phone and small tablet: a slim navy top bar with the tool name, the side nav as a drawer */
   .v3-top{display:none}
+  /* rail mode: for a tool with its own navy sidebar (the Course Planner) the shared nav shrinks
+     to a strip of tool icons, so there is never a second full sidebar */
+  .msp-sidebar,.v3-stage{transition:width .3s cubic-bezier(.2,.7,.2,1),left .3s cubic-bezier(.2,.7,.2,1)}
+  body.rail .msp-sidebar{width:68px;overflow:visible}
+  body.rail .v3-stage{left:68px}
+  body.rail .msp-sb-brand{padding:20px 0 14px;display:flex;justify-content:center}
+  body.rail .msp-sb-brand .msp-sb-logo{width:30px;height:30px;object-fit:cover;object-position:left center;margin:0}
+  body.rail .v3-kicker,body.rail .v3-title,body.rail .msp-sb-label,body.rail .msp-sb-text,body.rail .v3-dot,
+  body.rail .msp-sb-meta,body.rail .msp-sb-privacy,body.rail .msp-sb-brand::after{display:none}
+  body.rail .msp-sb-nav{padding:14px 10px}
+  body.rail .msp-sb-link{justify-content:center;padding:8px 0;position:relative}
+  body.rail .msp-sb-divider{margin:12px 6px}
+  body.rail .msp-sb-footer{padding:14px 0;display:flex;justify-content:center}
+  body.rail .msp-sb-footer img{height:30px;margin:0}
+  body.rail .msp-sb-link[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:58px;top:50%;transform:translateY(-50%);white-space:nowrap;
+    background:#fff;color:var(--msp-navy);font-size:12px;font-weight:600;padding:6px 10px;border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:20;pointer-events:none}
   @media(max-width:1100px){.v3-stage{left:var(--msp-sb-w-md)}}
+  @media(max-width:1100px){body.rail .v3-stage{left:68px}}
   @media(max-width:900px){
     .v3-top{display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;height:52px;padding:0 12px;background:var(--msp-navy);color:#fff;z-index:150;box-shadow:0 2px 12px rgba(1,27,60,.25)}
     .v3-top button{width:36px;height:36px;border-radius:9px;border:0;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -56,8 +73,8 @@
     <div class="msp-sb-label">Tools</div>
     <div id="toolNav"></div>
     <div class="msp-sb-divider"></div>
-    <a class="msp-sb-link" id="hubLink" href="index.html"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
-    <a class="msp-sb-link" id="otherLink" href="#"><span class="msp-sb-ico" id="otherIco"></span><span class="msp-sb-text" id="otherText"></span></a>
+    <a class="msp-sb-link" id="hubLink" data-tip="All tools" href="index.html"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
+    <a class="msp-sb-link" id="otherLink" data-tip="Switch side" href="#"><span class="msp-sb-ico" id="otherIco"></span><span class="msp-sb-text" id="otherText"></span></a>
   </nav>
   <div class="msp-sb-meta v3-actions">
     <span id="nowShowing"></span>
@@ -102,7 +119,7 @@
   $('otherText').innerHTML = S.otherLabel + '<span class="msp-sb-hint">Switch to the ' + O.label.toLowerCase() + ' side</span>';
   $('menuBtn').innerHTML = I('menu');
   $('toolNav').innerHTML = tools.map(function (t) {
-    return '<a class="msp-sb-link" data-id="' + t.id + '" href="#' + t.id + '">' +
+    return '<a class="msp-sb-link" data-id="' + t.id + '" data-tip="' + t.name + '" href="#' + t.id + '">' +
       '<span class="msp-sb-ico">' + I(t.icon) + '</span>' +
       '<span class="msp-sb-text">' + t.name + '<span class="msp-sb-hint">' + t.hint + '</span></span>' +
       '<span class="v3-dot" title="Open in the background"></span></a>';
@@ -132,6 +149,7 @@
     var t = tools.filter(function (x) { return x.id === id; })[0] || tools[0];
     if (current === t.id) return;
     current = t.id;
+    document.body.classList.toggle('rail', !!t.ownNav && window.innerWidth > 900);
     var f = frameFor(t, true);
     Object.keys(frames).forEach(function (k) { frames[k].classList.toggle('on', k === t.id); });
     document.querySelectorAll('#toolNav .msp-sb-link').forEach(function (a) {
@@ -155,6 +173,10 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
 
   window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  window.addEventListener('resize', function () {
+    var t = tools.filter(function (x) { return x.id === current; })[0];
+    document.body.classList.toggle('rail', !!(t && t.ownNav) && window.innerWidth > 900);
+  });
   var start = location.hash.slice(1);
   if (!start) { try { start = sessionStorage.getItem('v3-' + key) || ''; } catch (e) {} }
   show(start || tools[0].id);
