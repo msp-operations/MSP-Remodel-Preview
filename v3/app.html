@@ -74,36 +74,54 @@
   body.forced .v3-collapse{display:none}
   @media(max-width:1100px){.v3-stage{left:var(--msp-sb-w-md)} body.rail .v3-stage{left:68px}}
 
-  /* ── the landing view inside the panel ── */
-  .h-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 44px;gap:16px}
-  .h-bar img{height:30px;filter:brightness(0) invert(1);opacity:.92;display:block}
+  /* ── the landing view: a large version of the side nav ──
+     Each tool row is the side nav's own row, drawn at 1.5x. When a tool opens, every row flies to
+     its exact spot in the side nav (see fly() in the script); the emblem shrinks into the footer. */
+  .h-bar{display:flex;align-items:flex-start;justify-content:space-between;padding:28px 44px 0 24px;gap:16px}
+  .h-wm{height:32px;display:block;filter:brightness(0) invert(1);opacity:0}
   .h-switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.75);text-decoration:none;padding:9px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;transition:all .2s}
   .h-switch:hover{background:#fff;color:var(--msp-navy);border-color:#fff}
   .h-switch svg{width:14px;height:14px}
-  .h-stage{flex:1 1 auto;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
-  .h-orbit{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .h-orbit ellipse{fill:none;stroke:rgba(255,255,255,.09);stroke-width:1}
-  .h-orbit ellipse.o2{stroke:rgba(110,210,236,.14);stroke-dasharray:2 7}
-  .h-orbit ellipse.o3{stroke:rgba(255,255,255,.05)}
-  .h-core{position:relative;z-index:2;text-align:center;width:440px;pointer-events:none}
-  .h-core img{width:188px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);opacity:.96}
-  .h-core .glow{position:absolute;left:50%;top:94px;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(110,210,236,.16) 0%,rgba(110,210,236,0) 65%);z-index:-1}
-  .h-kick{display:inline-block;margin-top:24px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--msp-sky);padding:5px 12px;border:1px solid rgba(110,210,236,.35);border-radius:999px}
-  .h-core h1{font-family:var(--msp-font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15;color:#fff}
-  .h-cap{margin-top:10px;min-height:44px;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.6)}
-  .h-cap b{display:block;color:#fff;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px}
-  .h-tool{position:absolute;z-index:3;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:11px;padding:10px 18px 10px 11px;border-radius:999px;
-    text-decoration:none;white-space:nowrap;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);font-size:14px;font-weight:600;color:#fff;
-    transition:background .25s,border-color .25s,color .25s,box-shadow .25s,transform .25s}
-  .h-tool .ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(110,210,236,.14);color:var(--msp-sky);flex-shrink:0;transition:background .25s,color .25s}
-  .h-tool .ic svg{width:15px;height:15px}
-  .h-tool:hover,.h-tool:focus-visible{background:#fff;color:var(--msp-navy);border-color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.28);transform:translate(-50%,-50%) translateY(-2px);outline:none}
-  .h-tool:hover .ic,.h-tool:focus-visible .ic{background:var(--msp-navy);color:#fff}
+  .h-main{flex:1 1 auto;display:flex;align-items:center;justify-content:center;gap:clamp(48px,7vw,120px);padding:0 56px;min-height:0}
+  .h-left{width:320px;text-align:center;flex-shrink:0}
+  .h-emb{position:relative;width:200px;height:200px;margin:0 auto}
+  .h-emb::before,.h-emb::after{content:'';position:absolute;border-radius:50%;pointer-events:none}
+  .h-emb::before{inset:-38px;border:1px solid rgba(255,255,255,.08)}
+  .h-emb::after{inset:-80px;border:1px solid rgba(110,210,236,.09)}
+  .h-emb .glow{position:absolute;inset:-50px;border-radius:50%;background:radial-gradient(circle,rgba(110,210,236,.16) 0%,rgba(110,210,236,0) 65%)}
+  .h-emb img{position:absolute;left:6px;top:6px;width:188px;height:auto;filter:brightness(0) invert(1);opacity:.96}
+  .h-kick{display:inline-block;margin-top:34px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--msp-sky);padding:5px 12px;border:1px solid rgba(110,210,236,.35);border-radius:999px}
+  .h-left h1{font-family:var(--msp-font-display);font-weight:700;font-size:32px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15;color:#fff}
+  .h-line{margin-top:10px;font-size:14px;line-height:1.6;color:rgba(255,255,255,.6)}
+  .h-rows{display:flex;flex-direction:column;gap:8px}
+  .h-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin:0 0 8px 21px}
+  .h-row{display:flex;align-items:center;gap:22px;text-decoration:none;border-radius:16px;padding-right:22px;transition:background .2s}
+  .h-row:hover,.h-row:focus-visible{background:rgba(255,255,255,.035);outline:none}
+  .h-wrap{position:relative;flex-shrink:0;width:calc(var(--v3-roww,232px) * 1.5);height:calc(var(--v3-rowh,60px) * 1.5)}
+  .h-item{position:absolute!important;left:0;top:0;width:var(--v3-roww,232px)!important;margin:0!important;transform:scale(1.5);transform-origin:0 0;pointer-events:none;color:rgba(255,255,255,.92)!important}
+  .h-row:hover .h-item,.h-row:focus-visible .h-item{background:rgba(255,255,255,.1);color:#fff!important}
+  .h-row:hover .h-item .msp-sb-ico,.h-row:focus-visible .h-item .msp-sb-ico{background:rgba(110,210,236,.15);color:var(--msp-sky)}
+  .h-desc{max-width:260px;font-size:13px;line-height:1.55;color:rgba(255,255,255,.5);transition:color .2s}
+  .h-row:hover .h-desc{color:rgba(255,255,255,.8)}
+  @media(max-width:1240px){.h-desc{display:none}}
   .h-list{display:none}
   .h-foot{display:flex;justify-content:space-between;gap:16px;padding:22px 44px 28px;font-size:11px;color:rgba(255,255,255,.38)}
   .h-foot a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
-  body.home .h-tool{animation:hrise .6s cubic-bezier(.2,.7,.2,1) both}
-  @keyframes hrise{from{opacity:0;transform:translate(-50%,-38%)}to{opacity:1;transform:translate(-50%,-50%)}}
+  body.home .h-row{animation:hrise .55s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes hrise{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+  /* the UM wordmark sits in one fixed spot in both states, so it never moves */
+  .v3-mark{position:fixed;left:24px;top:28px;height:32px;filter:brightness(0) invert(1);opacity:.9;z-index:270;pointer-events:none;transition:opacity .2s}
+  .v3-side .msp-sb-logo{opacity:0}
+  body.rail .v3-mark{opacity:0}
+  body.rail .v3-side .msp-sb-logo{opacity:1}
+
+  /* while rows are flying, the real rows wait underneath */
+  .v3-fly{position:fixed;inset:0;z-index:265;pointer-events:none}
+  .v3-fly .msp-sb-link{position:absolute;margin:0;will-change:transform}
+  .v3-fly img{position:absolute;filter:brightness(0) invert(1);will-change:transform,opacity}
+  body.flying #toolNav .msp-sb-link,body.flying .v3-side .msp-sb-footer img,body.flying .h-item,body.flying #hEmb{visibility:hidden}
+  body.flying .h-row{animation:none}
 
   /* ── phone and small tablet ── */
   .v3-top{display:none}
@@ -123,14 +141,19 @@
     .v3-collapse{display:none}
     .v3-home{overflow-y:auto}
     .h-bar{padding:22px}
-    .h-stage{flex:0 0 auto;flex-direction:column;padding:18px 0 8px}
-    .h-orbit,.h-tool.ring{display:none}
-    .h-core{width:auto;padding:0 22px}.h-core img{width:150px}.h-core h1{font-size:26px}.h-cap{display:none}
-    .h-list{display:grid;gap:8px;width:100%;max-width:520px;padding:26px 22px 0;box-sizing:border-box}
-    .h-list .h-tool,.h-list .h-tool:hover,.h-list .h-tool:focus-visible{position:static;transform:none!important;left:auto;top:auto;white-space:normal;border-radius:14px;padding:12px 16px 12px 12px;animation:none}
-    .h-list .h-tool:hover{transform:none}
+    .h-wm{opacity:.92;height:28px}
+    .v3-mark{display:none}
+    .h-main{flex:0 0 auto;flex-direction:column;padding:10px 0 8px;gap:0}
+    .h-left{width:auto;padding:0 22px}
+    .h-emb{width:150px;height:150px}.h-emb img{width:140px;left:5px;top:5px}.h-emb::after{display:none}
+    .h-left h1{font-size:26px}.h-line{display:none}
+    .h-rows{display:none}
+    .h-list{display:grid;gap:8px;width:100%;max-width:520px;padding:26px 22px 0;box-sizing:border-box;margin:0 auto}
+    .h-tool{display:flex;align-items:center;gap:11px;border-radius:14px;padding:12px 16px 12px 12px;text-decoration:none;color:#fff;font-size:14px;font-weight:600;
+      background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13)}
+    .h-tool .ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(110,210,236,.14);color:var(--msp-sky);flex-shrink:0}
+    .h-tool .ic svg{width:15px;height:15px}
     .h-list small{display:block;font-size:11.5px;font-weight:400;color:rgba(255,255,255,.55)}
-    .h-list .h-tool:hover small{color:var(--msp-g5)}
     .h-foot{flex-direction:column;align-items:center;text-align:center;padding:24px 22px 32px}
   }
   @media(prefers-reduced-motion:reduce){:root{--v3-t:.01s} body.home .h-tool{animation:none}}
@@ -142,18 +165,17 @@
   <!-- the landing view -->
   <div class="v3-home" id="home">
     <header class="h-bar">
-      <img src="msp-ui/um-wordmark.png" alt="Maastricht University">
+      <img class="h-wm" src="msp-ui/um-wordmark.png" alt="">
       <a class="h-switch" id="homeSwitch" href="#"></a>
     </header>
-    <div class="h-stage" id="hStage">
-      <svg class="h-orbit" id="hOrbit" aria-hidden="true"></svg>
-      <div class="h-core">
-        <div class="glow"></div>
-        <img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
+    <div class="h-main">
+      <div class="h-left">
+        <div class="h-emb"><div class="glow"></div><img id="hEmb" src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme"></div>
         <div class="h-kick" id="hKick"></div>
         <h1 id="hName"></h1>
-        <div class="h-cap" id="hCap" aria-live="polite"></div>
+        <div class="h-line" id="hLine"></div>
       </div>
+      <nav class="h-rows" id="hRows" aria-label="Tools"><div class="h-label">Tools</div></nav>
       <nav class="h-list" id="hList" aria-label="Tools"></nav>
     </div>
     <footer class="h-foot">
@@ -188,6 +210,7 @@
   </div>
 </aside>
 <div class="msp-sb-overlay" id="overlay"></div>
+<img class="v3-mark" src="msp-ui/um-wordmark.png" alt="Maastricht University">
 
 <header class="v3-top">
   <button type="button" id="menuBtn" aria-label="Open the tool menu" aria-controls="msp-sidebar" aria-expanded="false"></button>
@@ -228,37 +251,72 @@
       '<span class="v3-dot" title="Loaded in the background"></span></a>';
   }).join('');
 
-  // ── landing view ──
+  // ── landing view: big rows that are the side nav's own rows at 1.5x ──
   $('homeSwitch').href = sideUrl(S.other);
   $('homeSwitch').innerHTML = S.otherLabel + ' ' + ARROW;
-  $('hKick').textContent = S.title; $('hName').textContent = V.name; $('hCap').textContent = S.line;
-  function pill(t, ring) {
-    var a = document.createElement('a');
-    a.className = 'h-tool' + (ring ? ' ring' : ''); a.href = '#' + t.id;
-    a.innerHTML = '<span class="ic">' + I(t.icon) + '</span>' + (ring ? '<span>' + t.name + '</span>' : '<span>' + t.name + '<small>' + t.blurb + '</small></span>');
-    if (ring) {
-      var cap = $('hCap');
-      var on = function () { cap.innerHTML = '<b>' + t.name + '</b>' + t.blurb; };
-      var off = function () { cap.textContent = S.line; };
-      a.addEventListener('mouseenter', on); a.addEventListener('mouseleave', off);
-      a.addEventListener('focus', on); a.addEventListener('blur', off);
-    }
-    return a;
+  $('hKick').textContent = S.title; $('hName').textContent = V.name; $('hLine').textContent = S.line;
+  tools.forEach(function (t, i) {
+    var r = document.createElement('a');
+    r.className = 'h-row'; r.href = '#' + t.id; r.style.animationDelay = (0.05 * i + 0.1) + 's';
+    r.innerHTML = '<span class="h-wrap"><span class="msp-sb-link h-item">' +
+      '<span class="msp-sb-ico">' + I(t.icon) + '</span>' +
+      '<span class="msp-sb-text">' + t.name + '<span class="msp-sb-hint">' + t.hint + '</span></span></span></span>' +
+      '<span class="h-desc">' + t.blurb + '</span>';
+    $('hRows').appendChild(r);
+    var m = document.createElement('a');
+    m.className = 'h-tool'; m.href = '#' + t.id;
+    m.innerHTML = '<span class="ic">' + I(t.icon) + '</span><span>' + t.name + '<small>' + t.blurb + '</small></span>';
+    $('hList').appendChild(m);
+  });
+  // the big rows use the side nav's exact row size, so the flight is a pure move and scale
+  function finalAside() { return window.innerWidth <= 1100 ? 220 : 260; }
+  function setRowVars() {
+    if (document.body.classList.contains('rail')) return;
+    var row = document.querySelector('#toolNav .msp-sb-link');
+    document.body.style.setProperty('--v3-roww', (finalAside() - 28) + 'px');
+    if (row && row.offsetHeight) document.body.style.setProperty('--v3-rowh', row.offsetHeight + 'px');
   }
-  var ringEls = tools.map(function (t, i) { var a = pill(t, true); a.style.animationDelay = (0.05 * i) + 's'; $('hStage').appendChild(a); return a; });
-  tools.forEach(function (t) { $('hList').appendChild(pill(t, false)); });
-  function layoutRing() {
-    var st = $('hStage'), w = st.clientWidth, h = st.clientHeight, cx = w / 2, cy = h / 2;
-    var rx = Math.min(w * 0.40, 560), ry = Math.min(h * 0.40, 300);
-    $('hOrbit').setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-    $('hOrbit').innerHTML =
-      '<ellipse class="o3" cx="' + cx + '" cy="' + cy + '" rx="' + (rx * 1.18) + '" ry="' + (ry * 1.22) + '"/>' +
-      '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"/>' +
-      '<ellipse class="o2" cx="' + cx + '" cy="' + cy + '" rx="' + (rx * 0.62) + '" ry="' + (ry * 0.70) + '"/>';
-    ringEls.forEach(function (a, i) {
-      var t = -Math.PI / 2 + (2 * Math.PI * i) / ringEls.length;
-      a.style.left = (cx + rx * Math.cos(t)) + 'px'; a.style.top = (cy + ry * Math.sin(t)) + 'px';
+
+  // ── the flight: rows and emblem move between the landing view and the side nav ──
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EASE = 'cubic-bezier(.65,0,.35,1)', DUR = 620, flying = false;
+  function canFly(t) { return !reduce && !flying && window.innerWidth > 900 && !!Element.prototype.animate && !(t && (t.ownNav || collapsed)); }
+  function fly(open, activeId, change) {
+    flying = true;
+    var small = [].slice.call(document.querySelectorAll('#toolNav .msp-sb-link'));
+    var big = [].slice.call(document.querySelectorAll('#hRows .h-item'));
+    var emS = document.querySelector('.v3-side .msp-sb-footer img'), emB = $('hEmb');
+    var W = finalAside() - 28;
+    var rs = small.map(function (e) { return e.getBoundingClientRect(); });
+    var rb = big.map(function (e) { return e.getBoundingClientRect(); });
+    var es = emS.getBoundingClientRect(), eb = emB.getBoundingClientRect();
+    var layer = document.createElement('div'); layer.className = 'v3-fly';
+    var plays = [];
+    small.forEach(function (el, i) {
+      var g = el.cloneNode(true), on = el.getAttribute('data-id') === activeId;
+      g.removeAttribute('href'); g.removeAttribute('aria-current'); g.classList.remove('loaded');
+      [].forEach.call(g.querySelectorAll('.v3-dot'), function (d) { d.remove(); });
+      g.classList.toggle('active', on);
+      g.style.left = rs[i].left + 'px'; g.style.top = rs[i].top + 'px'; g.style.width = W + 'px'; g.style.transformOrigin = '0 0';
+      var atBig = { transform: 'translate(' + (rb[i].left - rs[i].left) + 'px,' + (rb[i].top - rs[i].top) + 'px) scale(' + (rb[i].width / W) + ')', color: 'rgba(255,255,255,.92)' };
+      var atSmall = { transform: 'none', color: on ? '#fff' : 'rgba(255,255,255,.55)' };
+      layer.appendChild(g);
+      plays.push([g, open ? [atBig, atSmall] : [atSmall, atBig], (open ? i : small.length - 1 - i) * 28]);
     });
+    var gi = document.createElement('img'); gi.src = emB.src; gi.alt = '';
+    gi.style.left = es.left + 'px'; gi.style.top = es.top + 'px'; gi.style.width = es.width + 'px'; gi.style.height = es.height + 'px'; gi.style.transformOrigin = '0 0';
+    var eBig = { transform: 'translate(' + (eb.left - es.left) + 'px,' + (eb.top - es.top) + 'px) scale(' + (eb.width / es.width) + ')', opacity: .96 };
+    var eSmall = { transform: 'none', opacity: .4 };
+    layer.appendChild(gi);
+    plays.push([gi, open ? [eBig, eSmall] : [eSmall, eBig], 0]);
+    document.body.appendChild(layer);
+    document.body.classList.add('flying');
+    change();
+    var anims = plays.map(function (p) { return p[0].animate(p[1], { duration: DUR, easing: EASE, delay: p[2], fill: 'both' }); });
+    var done = false;
+    function finish() { if (done) return; done = true; layer.remove(); document.body.classList.remove('flying'); flying = false; }
+    Promise.all(anims.map(function (x) { return x.finished; })).then(finish, finish);
+    setTimeout(finish, DUR + 600);
   }
 
   // ── frames ──
@@ -316,19 +374,23 @@
 
   // ── the two states ──
   function goHome() {
-    atHome = true;
-    document.body.classList.add('home');
-    applyRail();
-    document.title = V.name + (key === 'staff' ? ', for staff' : '');
-    closeMenu();
-    requestAnimationFrame(layoutRing);
+    var t = tools.filter(function (x) { return x.id === current; })[0];
+    var animate = !atHome && canFly(t);
+    var change = function () {
+      atHome = true;
+      document.body.classList.add('home');
+      applyRail();
+      document.title = V.name + (key === 'staff' ? ', for staff' : '');
+      closeMenu();
+    };
+    if (animate) { setRowVars(); fly(false, current, change); } else { change(); setRowVars(); }
     setTimeout(warm, 900);
   }
   function show(id) {
     var t = tools.filter(function (x) { return x.id === id; })[0];
     if (!t) return goHome();
-    var wasHome = atHome;
-    atHome = false; current = t.id;
+    var wasHome = atHome, animate = wasHome && !initial && canFly(t);
+    current = t.id;
     var had = frames[t.id], f = frameFor(t, !(had && had.dataset.ready));
     if (f.dataset.ready) loading(false);
     Object.keys(frames).forEach(function (k) { frames[k].classList.toggle('on', k === t.id); });
@@ -340,9 +402,8 @@
     document.title = t.name + ' · ' + V.name;
     $('nowShowing').textContent = /^https?:/.test(t.url) ? 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'Original copy, not published yet';
     $('newTab').href = t.url; $('newTab').innerHTML = I('external') + ' Open in a new tab';
-    document.body.classList.remove('home');
-    applyRail();
-    closeMenu();
+    var change = function () { atHome = false; document.body.classList.remove('home'); applyRail(); closeMenu(); };
+    if (animate) fly(true, t.id, change); else change();
     if (wasHome) setTimeout(warm, 1200);
   }
 
@@ -356,13 +417,16 @@
 
   function route() { var h = location.hash.slice(1); if (h) show(h); else goHome(); }
   window.addEventListener('hashchange', route);
-  window.addEventListener('resize', function () { applyRail(); if (atHome) layoutRing(); });
+  window.addEventListener('resize', function () { applyRail(); setRowVars(); });
   // "All tools" links go home without leaving a '#' in the address
   ['hubLogo', 'hubLink'].forEach(function (id) {
     $(id).addEventListener('click', function (e) { e.preventDefault(); history.pushState(null, '', here + location.search); goHome(); });
   });
   window.addEventListener('popstate', route);
+  var initial = true;
+  setRowVars();
   route();
+  initial = false;
 })();
 </script>
 </body>
