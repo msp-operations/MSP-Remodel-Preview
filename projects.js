@@ -33,7 +33,7 @@ window.MSP_PROJECTS = [
     blurb: 'Where MSP graduates went: destinations, stories, community.' },
 
   { id: 'calendar', name: 'Academic Calendar',  hubs: ['staff'],             icon: 'clock',     live: 'https://msp-operations.github.io/MSP-Remodel-Preview/academic-calendar/', next: 'academic-calendar/', status: 'live',
-    blurb: 'Every operational deadline per office and period, with Outlook feeds.' },
+    blurb: 'Every operational deadline per office and period.' },
   { id: 'exams',    name: 'Exams Office',       hubs: [],                    icon: 'clipboard', live: 'https://msp-operations.github.io/MSP-Remodel-Preview/exams-office/', next: 'exams-office/', status: 'live',
     blurb: 'The exam coordinator manual: periods, checklists, procedures.' },
   { id: 'tutoring', name: 'Tutor Registration', hubs: ['staff'],             icon: 'users',     live: 'https://msp-operations.github.io/MSP-Remodel-Preview/tutoring/', next: 'tutoring/', status: 'live',

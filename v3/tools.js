@@ -30,7 +30,7 @@ window.V3 = {
         { id: 'project-periods',   name: 'Project Periods',    icon: 'target',    hint: 'Offer and allocate projects',
           blurb: 'Offer a P3 or P6 project, or run the allocation as the committee.', url: 'sites/project-periods/', note: 'Pending change, not on the live site yet' },
         { id: 'academic-calendar', name: 'Academic Calendar',  icon: 'clock',     hint: 'Deadlines per office',
-          blurb: 'Every operational deadline per office and period, with Outlook feeds.', url: 'https://msp-operations.github.io/Academic-Calendar/', ownNav: true },
+          blurb: 'Every operational deadline per office and period.', url: 'sites/academic-calendar/', note: 'Pending change, not on the live site yet', ownNav: true },
         { id: 'tutoring',          name: 'Tutor Registration', icon: 'users',     hint: 'Tutorial groups',
           blurb: 'Claim the tutorial groups you want to teach; the office allocates from here.', url: 'https://msp-tutoring.nl/' },
         { id: 'btr-projects',      name: 'BTR Projects',       icon: 'briefcase', hint: 'Offer a thesis project',
