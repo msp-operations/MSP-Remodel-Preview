@@ -16,11 +16,11 @@ window.V3 = {
         { id: 'course-planner',  name: 'Course Planner',  icon: 'calendar', hint: 'Plan your courses',
           blurb: 'Build a clash-free schedule and track your progress.', url: 'sites/course-planner/index.html', ownNav: true },
         { id: 'btr',             name: 'BTR Dashboard',   icon: 'book',     hint: 'Your bachelor thesis',
-          blurb: 'Guides, cohorts, rubrics and the projects on offer for your thesis.', url: 'sites/btr/' },
+          blurb: 'Guides, cohorts, rubrics and the projects on offer for your thesis.', url: 'sites/btr/', note: 'Pending change, not on the live site yet' },
         { id: 'project-periods', name: 'Project Periods', icon: 'target',   hint: 'P3 and P6 projects',
-          blurb: 'The P3 and P6 project catalogue and your preferences.', url: 'sites/project-periods/' },
+          blurb: 'The P3 and P6 project catalogue and your preferences.', url: 'sites/project-periods/', note: 'Pending change, not on the live site yet' },
         { id: 'msp-alumni',      name: 'MSP Alumni',      icon: 'globe',    hint: 'Where graduates went',
-          blurb: 'Where MSP graduates went: destinations, stories, community.', url: 'sites/msp-alumni/' }
+          blurb: 'Where MSP graduates went: destinations, stories, community.', url: 'sites/msp-alumni/', note: 'Pending change, not on the live site yet' }
       ]
     },
     staff: {
@@ -28,7 +28,7 @@ window.V3 = {
       line: 'The tools behind the programme, for support and academic staff.',
       tools: [
         { id: 'project-periods',   name: 'Project Periods',    icon: 'target',    hint: 'Offer and allocate projects',
-          blurb: 'Offer a P3 or P6 project, or run the allocation as the committee.', url: 'sites/project-periods/' },
+          blurb: 'Offer a P3 or P6 project, or run the allocation as the committee.', url: 'sites/project-periods/', note: 'Pending change, not on the live site yet' },
         { id: 'academic-calendar', name: 'Academic Calendar',  icon: 'clock',     hint: 'Deadlines per office',
           blurb: 'Every operational deadline per office and period, with Outlook feeds.', url: 'https://msp-operations.github.io/Academic-Calendar/' },
         { id: 'exams-office',      name: 'Exams Office',       icon: 'clipboard', hint: 'Exam coordinator manual',
