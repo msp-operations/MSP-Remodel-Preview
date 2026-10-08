@@ -54,14 +54,13 @@
   body.rail .v3-side{overflow:visible}
   body.rail .v3-stage{left:68px}
   body.rail .msp-sb-brand{padding:20px 0 14px;display:flex;justify-content:center}
-  body.rail .msp-sb-brand .msp-sb-logo{width:30px;height:30px;object-fit:cover;object-position:left center;margin:0}
+  body.rail .msp-sb-brand .msp-sb-logo{width:40px;height:40px;margin:0}
   body.rail .v3-kicker,body.rail .v3-title,body.rail .msp-sb-label,body.rail .msp-sb-text,body.rail .v3-dot,
   body.rail .msp-sb-meta,body.rail .msp-sb-privacy,body.rail .msp-sb-brand::after{display:none}
   body.rail .msp-sb-nav{padding:14px 10px}
   body.rail .msp-sb-link{justify-content:center;padding:8px 0;position:relative}
   body.rail .msp-sb-divider{margin:12px 6px}
   body.rail .msp-sb-footer{padding:14px 0;display:flex;justify-content:center}
-  body.rail .msp-sb-footer img{height:30px;margin:0}
   body.rail .msp-sb-link[data-tip]:hover::after,body.rail .v3-collapse:hover::after{content:attr(data-tip);position:absolute;left:58px;top:50%;transform:translateY(-50%);white-space:nowrap;
     background:#fff;color:var(--msp-navy);font-size:12px;font-weight:600;padding:6px 10px;border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:20;pointer-events:none}
   .v3-collapse{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 14px;padding:8px 10px;border:1px solid rgba(255,255,255,.1);border-radius:9px;
@@ -78,7 +77,6 @@
      Each tool row is the side nav's own row, drawn at 1.5x. When a tool opens, every row flies to
      its exact spot in the side nav (see fly() in the script); the emblem shrinks into the footer. */
   .h-bar{display:flex;align-items:flex-start;justify-content:space-between;padding:28px 44px 0 24px;gap:16px}
-  .h-wm{height:32px;display:block;filter:brightness(0) invert(1);opacity:0}
   .h-switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.75);text-decoration:none;padding:9px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;transition:all .2s}
   .h-switch:hover{background:#fff;color:var(--msp-navy);border-color:#fff}
   .h-switch svg{width:14px;height:14px}
@@ -111,16 +109,15 @@
   @keyframes hrise{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
 
   /* the UM wordmark sits in one fixed spot in both states, so it never moves */
-  .v3-mark{position:fixed;left:24px;top:28px;height:32px;filter:brightness(0) invert(1);opacity:.9;z-index:270;pointer-events:none;transition:opacity .2s}
-  .v3-side .msp-sb-logo{opacity:0}
-  body.rail .v3-mark{opacity:0}
-  body.rail .v3-side .msp-sb-logo{opacity:1}
+  /* the MSP emblem is the logo at the top of the side nav; the landing's big emblem flies into it */
+  .v3-side .msp-sb-brand .msp-sb-logo{height:56px;width:56px;margin-bottom:14px;opacity:.95}
+  .v3-side .msp-sb-footer:empty{display:none}
 
   /* while rows are flying, the real rows wait underneath */
   .v3-fly{position:fixed;inset:0;z-index:265;pointer-events:none}
   .v3-fly .msp-sb-link{position:absolute;margin:0;will-change:transform}
   .v3-fly img{position:absolute;filter:brightness(0) invert(1);will-change:transform,opacity}
-  body.flying #toolNav .msp-sb-link,body.flying .v3-side .msp-sb-footer img,body.flying .h-item,body.flying #hEmb{visibility:hidden}
+  body.flying #toolNav .msp-sb-link,body.flying .v3-side .msp-sb-brand .msp-sb-logo,body.flying .h-item,body.flying #hEmb{visibility:hidden}
   body.flying .h-row{animation:none}
 
   /* ── phone and small tablet ── */
@@ -141,8 +138,6 @@
     .v3-collapse{display:none}
     .v3-home{overflow-y:auto}
     .h-bar{padding:22px}
-    .h-wm{opacity:.92;height:28px}
-    .v3-mark{display:none}
     .h-main{flex:0 0 auto;flex-direction:column;padding:10px 0 8px;gap:0}
     .h-left{width:auto;padding:0 22px}
     .h-emb{width:150px;height:150px}.h-emb img{width:140px;left:5px;top:5px}.h-emb::after{display:none}
@@ -165,7 +160,7 @@
   <!-- the landing view -->
   <div class="v3-home" id="home">
     <header class="h-bar">
-      <img class="h-wm" src="msp-ui/um-wordmark.png" alt="">
+      <span></span>
       <a class="h-switch" id="homeSwitch" href="#"></a>
     </header>
     <div class="h-main">
@@ -187,7 +182,7 @@
   <!-- the side nav -->
   <div class="v3-side" id="side">
     <div class="msp-sb-brand">
-      <a id="hubLogo" href="#" title="All tools"><img src="msp-ui/um-wordmark.png" alt="Maastricht University" class="msp-sb-logo"></a>
+      <a id="hubLogo" href="#" title="All tools"><img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme" class="msp-sb-logo"></a>
       <div class="v3-kicker" id="kicker"></div>
       <div class="v3-title" id="title"></div>
     </div>
@@ -204,13 +199,11 @@
       <a class="msp-sb-cfg" id="newTab" href="#" target="_blank" rel="noopener"></a>
     </div>
     <div class="msp-sb-footer">
-      <img class="msp-sb-emblem" src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
       <div class="msp-sb-privacy">Each tool opens as its own website. Your place in a tool is kept while you switch.</div>
     </div>
   </div>
 </aside>
 <div class="msp-sb-overlay" id="overlay"></div>
-<img class="v3-mark" src="msp-ui/um-wordmark.png" alt="Maastricht University">
 
 <header class="v3-top">
   <button type="button" id="menuBtn" aria-label="Open the tool menu" aria-controls="msp-sidebar" aria-expanded="false"></button>
@@ -285,7 +278,7 @@
     flying = true;
     var small = [].slice.call(document.querySelectorAll('#toolNav .msp-sb-link'));
     var big = [].slice.call(document.querySelectorAll('#hRows .h-item'));
-    var emS = document.querySelector('.v3-side .msp-sb-footer img'), emB = $('hEmb');
+    var emS = document.querySelector('.v3-side .msp-sb-brand .msp-sb-logo'), emB = $('hEmb');
     var W = finalAside() - 28;
     var rs = small.map(function (e) { return e.getBoundingClientRect(); });
     var rb = big.map(function (e) { return e.getBoundingClientRect(); });
@@ -306,7 +299,7 @@
     var gi = document.createElement('img'); gi.src = emB.src; gi.alt = '';
     gi.style.left = es.left + 'px'; gi.style.top = es.top + 'px'; gi.style.width = es.width + 'px'; gi.style.height = es.height + 'px'; gi.style.transformOrigin = '0 0';
     var eBig = { transform: 'translate(' + (eb.left - es.left) + 'px,' + (eb.top - es.top) + 'px) scale(' + (eb.width / es.width) + ')', opacity: .96 };
-    var eSmall = { transform: 'none', opacity: .4 };
+    var eSmall = { transform: 'none', opacity: .95 };
     layer.appendChild(gi);
     plays.push([gi, open ? [eBig, eSmall] : [eSmall, eBig], 0]);
     document.body.appendChild(layer);
