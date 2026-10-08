@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
   admin.html - the Project Committee dashboard. Magic-link login; only
-  addresses in admin_user see anything (Row-Level Security does the real
+  addresses in pp_admin_user see anything (Row-Level Security does the real
   gatekeeping, not this page). Review submissions, assign codes, publish the
   catalogue, export the bible for the allocator and the booklet for print.
 -->
@@ -12,8 +12,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Committee - MSP Project Periods</title>
 <link rel="icon" type="image/png" href="assets/img/msp-logo.png">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="assets/collent.css?v=202610081500">
+<link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="assets/collent.css?v=202610081700">
 </head>
 <body>
 <header class="c-header" id="chrome-header"></header>
@@ -126,7 +126,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/vendor/supabase.js"></script>
 <script src="assets/config.js?v=202610061044"></script>
 <script src="assets/demo-data.js?v=202610061044"></script>
 <script src="assets/supabase.js?v=202610061044"></script>

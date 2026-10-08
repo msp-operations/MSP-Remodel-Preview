@@ -8,13 +8,11 @@
 <meta name="description" content="Every MSP graduate since 2011, mapped: the countries they live in, the universities they continued at, and the work they do now." />
 <meta name="theme-color" content="#001C3D" />
 <link rel="icon" type="image/png" href="assets/logos/maastricht-science-programme-logo.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 
 <!-- Map geometry: d3-geo + Natural Earth TopoJSON (pinned, hash-verified) -->
-<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<script src="assets/vendor/d3-7.9.0/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="assets/vendor/topojson-client-3.1.0/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
 
 <style>
   :root {
@@ -433,7 +431,7 @@ var LABEL = { "United States of America": "United States", "Czechia": "Czech Rep
 
 (function () {
   var svg = d3.select("#map"), W = 760, H = 400, tip = d3.select("#map-tip");
-  d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then(function (topology) {
+  d3.json("assets/vendor/world-atlas-2.0.2/countries-110m.json").then(function (topology) {
     var countries = topojson.feature(topology, topology.objects.countries).features
       .filter(function (f) { return f.properties.name !== "Antarctica"; });
     var projection = d3.geoNaturalEarth1()

@@ -6,7 +6,7 @@
                 submissions, committee dashboard.
      "preview"  config.js still holds the placeholders: the catalogue shows
                 app/assets/demo-data.js and the form cannot submit.
-   The same auth pattern as the tutoring tool (magic link + admin_user
+   The same auth pattern as the tutoring tool (magic link + pp_admin_user
    allow-list + Row-Level Security). See app/supabase/schema.sql.
    ========================================================================== */
 (function () {
@@ -101,7 +101,7 @@
     onAuth(cb) { if (client) client.auth.onAuthStateChange((event, s) => cb(s, event)); },
     async isAllowed() {
       if (!client) return false;
-      const { data, error } = await client.rpc("is_admin");
+      const { data, error } = await client.rpc("pp_is_admin");
       if (error) fail(error);
       return !!data;
     },
@@ -136,12 +136,12 @@
       if (error) fail(error);
     },
     async listAdmins() {
-      const { data, error } = await client.from("admin_user").select("*").order("email");
+      const { data, error } = await client.from("pp_admin_user").select("*").order("email");
       if (error) fail(error);
       return data || [];
     },
     async addAdmin(email) {
-      const { error } = await client.from("admin_user").insert({ email: email.trim().toLowerCase() });
+      const { error } = await client.from("pp_admin_user").insert({ email: email.trim().toLowerCase() });
       if (error) fail(error);
     },
   };

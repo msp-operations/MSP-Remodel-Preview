@@ -3,6 +3,8 @@
    hint  = the short line under the name in the side nav
    blurb = the longer line shown on the landing view when you hover a tool
    ownNav: true = the tool brings its own navy sidebar; the shared nav then shrinks to an icon rail.
+   note  = optional line under the nav; build-preview.py adds 'Pending change, not on the live site yet' (and swaps
+           the url to sites/...) for tools listed in its PENDING table, so do not look for that text here.
    Edit this file to add, remove or reorder tools. Version 2 (the restyle) is separate. */
 window.V3 = {
   name: 'MSP Online',   // placeholder name, Martijn's call

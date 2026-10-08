@@ -7,6 +7,7 @@
 <title>MSP Online</title>
 <meta name="theme-color" content="#011B3C">
 <link rel="icon" type="image/png" href="msp-ui/favicon.png">
+<link rel="preload" href="msp-ui/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="msp-ui/msp-ui.css">
 <style>
   /* Version 3: one page. Without a tool in the address (#faq) the navy side nav fills the whole
@@ -23,7 +24,7 @@
   .msp-sidebar{overflow:hidden;transition:width var(--v3-t) var(--v3-ease),transform .3s ease}
   .v3-side{position:relative;display:flex;flex-direction:column;min-height:100%;width:100%;overflow-y:auto;overflow-x:hidden;
     transition:opacity .3s ease .32s,visibility 0s linear 0s}
-  .v3-home{position:absolute;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;z-index:3;color:#fff;
+  .v3-home{position:absolute;top:0;left:0;width:100vw;height:100vh;height:100dvh;display:flex;flex-direction:column;z-index:3;color:#fff;
     background:
       radial-gradient(ellipse 60% 55% at 50% 48%, rgba(110,210,236,.10) 0%, rgba(110,210,236,0) 60%),
       radial-gradient(ellipse 120% 90% at 50% 0%, #0A3060 0%, #02274F 38%, #011B3C 75%);
@@ -35,8 +36,8 @@
   /* ── side nav details ── */
   .v3-kicker{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-sky);opacity:.9;margin-top:2px}
   .v3-title{font-family:var(--msp-font-display);font-size:20px;font-weight:700;letter-spacing:-.02em;color:#fff;margin-top:2px}
-  .msp-sb-link .v3-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--msp-sky);opacity:0;transition:opacity .3s;flex-shrink:0}
-  .msp-sb-link.loaded .v3-dot{opacity:.55}
+  .msp-sb-link .v3-dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--msp-sky);opacity:0;transition:opacity .3s;flex-shrink:0}
+  .msp-sb-link.loaded .v3-dot{opacity:.85}
   .msp-sb-link.active .v3-dot{opacity:0}
   .v3-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 
@@ -47,6 +48,14 @@
   .v3-stage iframe.on{opacity:1;visibility:visible}
   .v3-bar{position:absolute;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--msp-sky),var(--msp-orange));z-index:5;transition:width .6s cubic-bezier(.2,.7,.2,1),opacity .3s;opacity:0}
   .v3-bar.go{opacity:1;width:70%}
+  .v3-stuck{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--msp-g0);z-index:4;padding:24px}
+  .v3-stuck.show{display:flex}
+  .v3-stuck .box{max-width:420px;background:#fff;border:1px solid var(--msp-g2);border-radius:var(--msp-rl);box-shadow:var(--msp-sh-md);padding:28px 30px;text-align:center;color:var(--msp-g9)}
+  .v3-stuck h2{font-family:var(--msp-font-display);font-size:20px;margin:0 0 8px}
+  .v3-stuck p{margin:0 0 18px;color:var(--msp-g5);font-size:14px;line-height:1.6}
+  .v3-stuck .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .v3-railtab{display:none!important}
+  body.rail .v3-railtab{display:flex!important}
   .v3-bar.done{width:100%;opacity:0;transition:width .2s,opacity .4s .2s}
 
   /* ── rail mode: the Course Planner (own sidebar) or a collapsed nav ── */
@@ -87,21 +96,23 @@
   .h-emb::before{inset:-38px;border:1px solid rgba(255,255,255,.08)}
   .h-emb::after{inset:-80px;border:1px solid rgba(110,210,236,.09)}
   .h-emb .glow{position:absolute;inset:-50px;border-radius:50%;background:radial-gradient(circle,rgba(110,210,236,.16) 0%,rgba(110,210,236,0) 65%)}
-  .h-emb img{position:absolute;left:6px;top:6px;width:188px;height:auto;filter:brightness(0) invert(1);opacity:.96}
+  .h-emb img{position:absolute;left:6px;top:6px;width:188px;height:auto;opacity:.96}
   .h-kick{display:inline-block;margin-top:34px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--msp-sky);padding:5px 12px;border:1px solid rgba(110,210,236,.35);border-radius:999px}
   .h-left h1{font-family:var(--msp-font-display);font-weight:700;font-size:32px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15;color:#fff}
   .h-line{margin-top:10px;font-size:14px;line-height:1.6;color:rgba(255,255,255,.6)}
   .h-rows{display:flex;flex-direction:column;gap:8px}
   .h-label{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.35);margin:0 0 8px 21px}
   .h-row{display:flex;align-items:center;gap:22px;text-decoration:none;border-radius:16px;padding-right:22px;transition:background .2s}
-  .h-row:hover,.h-row:focus-visible{background:rgba(255,255,255,.035);outline:none}
+  .h-row:hover,.h-row:focus-visible{background:rgba(255,255,255,.035)}
+  .h-row:focus-visible,.h-tool:focus-visible{outline:2px solid var(--msp-sky);outline-offset:3px}
   .h-wrap{position:relative;flex-shrink:0;width:calc(var(--v3-roww,232px) * 1.5);height:calc(var(--v3-rowh,60px) * 1.5)}
   .h-item{position:absolute!important;left:0;top:0;width:var(--v3-roww,232px)!important;margin:0!important;transform:scale(1.5);transform-origin:0 0;pointer-events:none;color:rgba(255,255,255,.92)!important}
   .h-row:hover .h-item,.h-row:focus-visible .h-item{background:rgba(255,255,255,.1);color:#fff!important}
   .h-row:hover .h-item .msp-sb-ico,.h-row:focus-visible .h-item .msp-sb-ico{background:rgba(110,210,236,.15);color:var(--msp-sky)}
   .h-desc{max-width:260px;font-size:13px;line-height:1.55;color:rgba(255,255,255,.5);transition:color .2s}
   .h-row:hover .h-desc{color:rgba(255,255,255,.8)}
-  @media(max-width:1240px){.h-desc{display:none}}
+  @media(max-width:1240px){.h-desc{max-width:190px;font-size:12px}}
+  @media(max-width:1080px){.h-desc{display:none}}
   .h-list{display:none}
   .h-foot{display:flex;justify-content:space-between;gap:16px;padding:22px 44px 28px;font-size:11px;color:rgba(255,255,255,.38)}
   .h-foot a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
@@ -116,7 +127,8 @@
   /* while rows are flying, the real rows wait underneath */
   .v3-fly{position:fixed;inset:0;z-index:265;pointer-events:none}
   .v3-fly .msp-sb-link{position:absolute;margin:0;will-change:transform}
-  .v3-fly img{position:absolute;filter:brightness(0) invert(1);will-change:transform,opacity}
+  .v3-fly img{position:absolute;will-change:transform,opacity}
+  .v3-side .msp-sb-brand .msp-sb-logo{filter:none}
   body.flying #toolNav .msp-sb-link,body.flying .v3-side .msp-sb-brand .msp-sb-logo,body.flying .h-item,body.flying #hEmb{visibility:hidden}
   body.flying .h-row{animation:none}
 
@@ -165,13 +177,13 @@
     </header>
     <div class="h-main">
       <div class="h-left">
-        <div class="h-emb"><div class="glow"></div><img id="hEmb" src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme"></div>
+        <div class="h-emb"><div class="glow"></div><img id="hEmb" src="msp-ui/msp-emblem-white.png" alt="Maastricht Science Programme"></div>
         <div class="h-kick" id="hKick"></div>
         <h1 id="hName"></h1>
         <div class="h-line" id="hLine"></div>
       </div>
-      <nav class="h-rows" id="hRows" aria-label="Tools"><div class="h-label">Tools</div></nav>
-      <nav class="h-list" id="hList" aria-label="Tools"></nav>
+      <nav class="h-rows" id="hRows" aria-label="All tools"><div class="h-label">Tools</div></nav>
+      <nav class="h-list" id="hList" aria-label="All tools (compact list)"></nav>
     </div>
     <footer class="h-foot">
       <span>Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University</span>
@@ -182,16 +194,17 @@
   <!-- the side nav -->
   <div class="v3-side" id="side">
     <div class="msp-sb-brand">
-      <a id="hubLogo" href="#" title="All tools"><img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme" class="msp-sb-logo"></a>
+      <a id="hubLogo" href="#" title="All tools"><img src="msp-ui/msp-emblem-white.png" alt="Maastricht Science Programme" class="msp-sb-logo"></a>
       <div class="v3-kicker" id="kicker"></div>
       <div class="v3-title" id="title"></div>
     </div>
-    <nav class="msp-sb-nav" aria-label="Tools">
+    <nav class="msp-sb-nav" aria-label="Switch tool">
       <button type="button" class="v3-collapse" id="collapseBtn" aria-controls="msp-sidebar"></button>
       <div class="msp-sb-label">Tools</div>
       <div id="toolNav"></div>
       <div class="msp-sb-divider"></div>
-      <a class="msp-sb-link" id="hubLink" data-tip="All tools" href="#"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
+      <a class="msp-sb-link" id="hubLink" data-tip="All tools" aria-label="All tools, back to the overview" href="#"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
+      <a class="msp-sb-link v3-railtab" id="railNewTab" data-tip="Open in a new tab" aria-label="Open this tool in a new tab" href="#" target="_blank" rel="noopener"><span class="msp-sb-ico" id="railNewTabIco"></span></a>
       <a class="msp-sb-link" id="otherLink" data-tip="Switch side" href="#"><span class="msp-sb-ico" id="otherIco"></span><span class="msp-sb-text" id="otherText"></span></a>
     </nav>
     <div class="msp-sb-meta v3-actions">
@@ -212,6 +225,9 @@
 
 <main class="v3-stage" id="stage" aria-live="polite">
   <div class="v3-bar" id="bar"></div>
+  <div class="v3-stuck" id="stuck" role="alert"><div class="box"><h2 id="stuckTitle"></h2>
+    <p>The site is taking longer than usual. It may be slow or offline right now.</p>
+    <div class="row"><a class="msp-btn msp-btn-or" id="stuckOpen" target="_blank" rel="noopener">Open in a new tab</a><button type="button" class="msp-btn msp-btn-gh" id="stuckRetry">Try again</button></div></div></div>
 </main>
 
 <script src="tools.js"></script>
@@ -238,7 +254,7 @@
   $('otherText').innerHTML = S.otherLabel + '<span class="msp-sb-hint">Switch to the ' + O.label.toLowerCase() + ' side</span>';
   $('menuBtn').innerHTML = I('menu');
   $('toolNav').innerHTML = tools.map(function (t) {
-    return '<a class="msp-sb-link" data-id="' + t.id + '" data-tip="' + t.name + '" href="#' + t.id + '">' +
+    return '<a class="msp-sb-link" data-id="' + t.id + '" data-tip="' + t.name + '" aria-label="' + t.name + ': ' + t.hint + '" href="#' + t.id + '">' +
       '<span class="msp-sb-ico">' + I(t.icon) + '</span>' +
       '<span class="msp-sb-text">' + t.name + '<span class="msp-sb-hint">' + t.hint + '</span></span>' +
       '<span class="v3-dot" title="Loaded in the background"></span></a>';
@@ -322,9 +338,9 @@
   function frameFor(t, visible) {
     if (frames[t.id]) return frames[t.id];
     var f = document.createElement('iframe');
-    f.title = t.name; f.src = t.url; f.setAttribute('allow', 'clipboard-write; fullscreen');
+    f.title = t.name; f.src = t.url; f.setAttribute('allow', 'clipboard-write; fullscreen'); f.referrerPolicy = 'no-referrer';
     f.addEventListener('load', function () {
-      f.dataset.ready = '1';
+      f.dataset.ready = '1'; if (current === t.id) stuck(false);
       var a = document.querySelector('.msp-sb-link[data-id="' + t.id + '"]'); if (a) a.classList.add('loaded');
       if (current === t.id && !atHome) loading(false);
     });
@@ -332,11 +348,30 @@
     if (visible) loading(true);
     return f;
   }
+  // a tool that has not loaded after 8 seconds gets a visible card instead of a stuck bar
+  var stuckT;
+  function stuck(on, t) {
+    clearTimeout(stuckT);
+    $('stuck').classList.toggle('show', !!on);
+    if (on) { $('stuckTitle').textContent = t.name + ' is still loading'; $('stuckOpen').href = t.url; }
+  }
+  function watch(t) {
+    clearTimeout(stuckT); stuck(false);
+    var f = frames[t.id]; if (!f || f.dataset.ready) return;
+    stuckT = setTimeout(function () { if (current === t.id && !atHome && !f.dataset.ready) stuck(true, t); }, 8000);
+  }
+  $('stuckRetry').addEventListener('click', function () {
+    var t = tools.filter(function (x) { return x.id === current; })[0]; if (!t) return;
+    var old = frames[t.id]; if (old) { old.remove(); delete frames[t.id]; }
+    stuck(false); var f = frameFor(t, true); f.classList.add('on'); watch(t);
+  });
   // quietly load every tool in the background, one after the other, so each first click is instant
   var warming = false;
   function warm() {
     if (warming) return; warming = true;
-    var queue = tools.filter(function (t) { return !frames[t.id]; });
+    var c = navigator.connection;
+    if (window.innerWidth <= 900 || (c && (c.saveData || /2g/.test(c.effectiveType || '')))) return;
+    var queue = tools.filter(function (t) { return !frames[t.id]; }).slice(0, 2);
     (function next() {
       var t = queue.shift(); if (!t) return;
       if (frames[t.id]) return next();
@@ -395,6 +430,8 @@
     document.title = t.name + ' · ' + V.name;
     $('nowShowing').textContent = t.note ? t.note : /^https?:/.test(t.url) ? 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'Original copy, not published yet';
     $('newTab').href = t.url; $('newTab').innerHTML = I('external') + ' Open in a new tab';
+    $('railNewTab').href = t.url; $('railNewTabIco').innerHTML = I('external');
+    watch(t);
     var change = function () { atHome = false; document.body.classList.remove('home'); applyRail(); closeMenu(); };
     if (animate) fly(true, t.id, change); else change();
     if (wasHome) setTimeout(warm, 1200);

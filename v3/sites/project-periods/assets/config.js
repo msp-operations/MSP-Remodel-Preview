@@ -4,7 +4,7 @@
    1. Create a project at https://supabase.com in an EU region (Frankfurt),
       the same organisation ("MSP") that hosts the tutoring tool.
    2. Run app/supabase/schema.sql once in the SQL editor, then add the
-      committee's email addresses to admin_user (instructions in the file).
+      committee's email addresses to pp_admin_user (instructions in the file).
    3. Supabase dashboard > Project Settings > API: copy the Project URL and
       the "anon public" key below.
    4. The anon key is safe to publish. Row-Level Security decides what it can
