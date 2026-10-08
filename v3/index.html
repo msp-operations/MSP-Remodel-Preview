@@ -1,177 +1,366 @@
 <!doctype html>
 <html lang="en">
 <head>
+<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MSP Online</title>
-<meta name="description" content="Every Maastricht Science Programme web tool in one place.">
-<meta name="robots" content="noindex">
 <meta name="theme-color" content="#011B3C">
 <link rel="icon" type="image/png" href="msp-ui/favicon.png">
 <link rel="stylesheet" href="msp-ui/msp-ui.css">
 <style>
-  /* The front door: one navy page, the emblem at the centre, the tools on its orbit.
-     No sidebar here on purpose; each tool opens in the shared sidebar layout. */
-  body{margin:0;font-family:var(--msp-font);color:#fff;-webkit-font-smoothing:antialiased;
+  /* Version 3: one page. Without a tool in the address (#faq) the navy side nav fills the whole
+     screen as the landing view, with the tools on an orbit around the emblem. Choosing a tool shrinks
+     that same navy panel into the side nav while the tool's website slides in beside it; "All tools"
+     grows it back. Each tool lives in its own frame, created once and kept, so switching is instant
+     and keeps your place. The frames show the real sites; nothing in them is restyled. */
+  html,body{height:100%;margin:0;overflow:hidden;background:var(--msp-navy)}
+  body{font-family:var(--msp-font)}
+  .msp-sidebar{view-transition-name:none}
+  :root{--v3-ease:cubic-bezier(.65,0,.35,1);--v3-t:.62s}
+
+  /* ── the navy panel: landing view and side nav are the same element ── */
+  .msp-sidebar{overflow:hidden;transition:width var(--v3-t) var(--v3-ease),transform .3s ease}
+  .v3-side{position:relative;display:flex;flex-direction:column;min-height:100%;width:100%;overflow-y:auto;overflow-x:hidden;
+    transition:opacity .3s ease .32s,visibility 0s linear 0s}
+  .v3-home{position:absolute;top:0;left:0;width:100vw;height:100vh;display:flex;flex-direction:column;z-index:3;color:#fff;
     background:
       radial-gradient(ellipse 60% 55% at 50% 48%, rgba(110,210,236,.10) 0%, rgba(110,210,236,0) 60%),
       radial-gradient(ellipse 120% 90% at 50% 0%, #0A3060 0%, #02274F 38%, #011B3C 75%);
-    background-color:#011B3C;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
-  a{color:inherit}
+    opacity:0;visibility:hidden;transition:opacity .28s ease,visibility 0s linear .28s}
+  body.home .msp-sidebar{width:100vw!important;transform:none!important}
+  body.home .v3-side{opacity:0;visibility:hidden;transition:opacity .15s ease,visibility 0s linear .15s}
+  body.home .v3-home{opacity:1;visibility:visible;transition:opacity .45s ease .2s,visibility 0s}
 
-  /* top and bottom bars */
-  .bar{display:flex;align-items:center;justify-content:space-between;padding:28px 44px;gap:16px}
-  .bar img{height:30px;filter:brightness(0) invert(1);opacity:.92;display:block}
-  .switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.75);text-decoration:none;padding:9px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;transition:all .2s}
-  .switch:hover{background:#fff;color:var(--msp-navy);border-color:#fff}
-  .switch svg{width:14px;height:14px}
-  .kicker{display:inline-block;margin-top:24px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--msp-sky);padding:5px 12px;border:1px solid rgba(110,210,236,.35);border-radius:999px}
-  .bar .prog{font-size:10.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.55);text-align:right;line-height:1.6}
-  .foot{display:flex;justify-content:space-between;gap:16px;padding:22px 44px 28px;font-size:11px;color:rgba(255,255,255,.38);letter-spacing:.02em}
-  .foot a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
-  .foot a:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+  /* ── side nav details ── */
+  .v3-kicker{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-sky);opacity:.9;margin-top:2px}
+  .v3-title{font-family:var(--msp-font-display);font-size:20px;font-weight:700;letter-spacing:-.02em;color:#fff;margin-top:2px}
+  .msp-sb-link .v3-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--msp-sky);opacity:0;transition:opacity .3s;flex-shrink:0}
+  .msp-sb-link.loaded .v3-dot{opacity:.55}
+  .msp-sb-link.active .v3-dot{opacity:0}
+  .v3-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 
-  /* the stage */
-  .stage{flex:1 0 auto;position:relative;display:flex;align-items:center;justify-content:center;min-height:560px}
-  .orbit{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-  .orbit ellipse{fill:none;stroke:rgba(255,255,255,.09);stroke-width:1}
-  .orbit ellipse.o2{stroke:rgba(110,210,236,.14);stroke-dasharray:2 7}
-  .orbit ellipse.o3{stroke:rgba(255,255,255,.05)}
+  /* ── the stage with the tool frames ── */
+  .v3-stage{position:fixed;top:0;right:0;bottom:0;left:var(--msp-sb-w);background:#fff;transition:left var(--v3-t) var(--v3-ease)}
+  body.home .v3-stage{left:100vw}
+  .v3-stage iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;opacity:0;visibility:hidden;transition:opacity .25s ease}
+  .v3-stage iframe.on{opacity:1;visibility:visible}
+  .v3-bar{position:absolute;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--msp-sky),var(--msp-orange));z-index:5;transition:width .6s cubic-bezier(.2,.7,.2,1),opacity .3s;opacity:0}
+  .v3-bar.go{opacity:1;width:70%}
+  .v3-bar.done{width:100%;opacity:0;transition:width .2s,opacity .4s .2s}
 
-  .core{position:relative;z-index:2;text-align:center;width:440px;pointer-events:none}
-  .core img{view-transition-name:msp-emblem;width:188px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);opacity:.96}
-  .core .glow{position:absolute;left:50%;top:94px;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;
-    background:radial-gradient(circle, rgba(110,210,236,.16) 0%, rgba(110,210,236,0) 65%);z-index:-1}
-  .core h1{font-family:var(--msp-font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15}
-  .core .cap{margin-top:10px;min-height:44px;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.6);transition:opacity .2s}
-  .core .cap b{display:block;color:#fff;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px}
+  /* ── rail mode: the Course Planner (own sidebar) or a collapsed nav ── */
+  body.rail .msp-sidebar{width:68px;overflow:visible}
+  body.rail .v3-side{overflow:visible}
+  body.rail .v3-stage{left:68px}
+  body.rail .msp-sb-brand{padding:20px 0 14px;display:flex;justify-content:center}
+  body.rail .msp-sb-brand .msp-sb-logo{width:30px;height:30px;object-fit:cover;object-position:left center;margin:0}
+  body.rail .v3-kicker,body.rail .v3-title,body.rail .msp-sb-label,body.rail .msp-sb-text,body.rail .v3-dot,
+  body.rail .msp-sb-meta,body.rail .msp-sb-privacy,body.rail .msp-sb-brand::after{display:none}
+  body.rail .msp-sb-nav{padding:14px 10px}
+  body.rail .msp-sb-link{justify-content:center;padding:8px 0;position:relative}
+  body.rail .msp-sb-divider{margin:12px 6px}
+  body.rail .msp-sb-footer{padding:14px 0;display:flex;justify-content:center}
+  body.rail .msp-sb-footer img{height:30px;margin:0}
+  body.rail .msp-sb-link[data-tip]:hover::after,body.rail .v3-collapse:hover::after{content:attr(data-tip);position:absolute;left:58px;top:50%;transform:translateY(-50%);white-space:nowrap;
+    background:#fff;color:var(--msp-navy);font-size:12px;font-weight:600;padding:6px 10px;border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:20;pointer-events:none}
+  .v3-collapse{display:flex;align-items:center;gap:10px;width:100%;margin:0 0 14px;padding:8px 10px;border:1px solid rgba(255,255,255,.1);border-radius:9px;
+    background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);font:500 12px var(--msp-font);cursor:pointer;transition:all .2s;position:relative}
+  .v3-collapse:hover{background:rgba(255,255,255,.1);color:#fff}
+  .v3-collapse:focus-visible{outline:2px solid var(--msp-sky);outline-offset:2px}
+  .v3-collapse svg{width:16px;height:16px;flex-shrink:0}
+  body.rail .v3-collapse{justify-content:center;padding:8px 0}
+  body.rail .v3-collapse span{display:none}
+  body.forced .v3-collapse{display:none}
+  @media(max-width:1100px){.v3-stage{left:var(--msp-sb-w-md)} body.rail .v3-stage{left:68px}}
 
-  /* the tools */
-  .tool{position:absolute;z-index:3;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:11px;
-    padding:10px 18px 10px 11px;border-radius:999px;text-decoration:none;white-space:nowrap;
-    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);
-    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
-    font-size:14px;font-weight:600;letter-spacing:-.005em;color:#fff;
+  /* ── the landing view inside the panel ── */
+  .h-bar{display:flex;align-items:center;justify-content:space-between;padding:28px 44px;gap:16px}
+  .h-bar img{height:30px;filter:brightness(0) invert(1);opacity:.92;display:block}
+  .h-switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.75);text-decoration:none;padding:9px 16px;border:1px solid rgba(255,255,255,.18);border-radius:999px;transition:all .2s}
+  .h-switch:hover{background:#fff;color:var(--msp-navy);border-color:#fff}
+  .h-switch svg{width:14px;height:14px}
+  .h-stage{flex:1 1 auto;position:relative;display:flex;align-items:center;justify-content:center;min-height:0}
+  .h-orbit{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .h-orbit ellipse{fill:none;stroke:rgba(255,255,255,.09);stroke-width:1}
+  .h-orbit ellipse.o2{stroke:rgba(110,210,236,.14);stroke-dasharray:2 7}
+  .h-orbit ellipse.o3{stroke:rgba(255,255,255,.05)}
+  .h-core{position:relative;z-index:2;text-align:center;width:440px;pointer-events:none}
+  .h-core img{width:188px;height:auto;display:block;margin:0 auto;filter:brightness(0) invert(1);opacity:.96}
+  .h-core .glow{position:absolute;left:50%;top:94px;width:280px;height:280px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(110,210,236,.16) 0%,rgba(110,210,236,0) 65%);z-index:-1}
+  .h-kick{display:inline-block;margin-top:24px;font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--msp-sky);padding:5px 12px;border:1px solid rgba(110,210,236,.35);border-radius:999px}
+  .h-core h1{font-family:var(--msp-font-display);font-weight:700;font-size:30px;letter-spacing:-.02em;margin:12px 0 0;line-height:1.15;color:#fff}
+  .h-cap{margin-top:10px;min-height:44px;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.6)}
+  .h-cap b{display:block;color:#fff;font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px}
+  .h-tool{position:absolute;z-index:3;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:11px;padding:10px 18px 10px 11px;border-radius:999px;
+    text-decoration:none;white-space:nowrap;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);font-size:14px;font-weight:600;color:#fff;
     transition:background .25s,border-color .25s,color .25s,box-shadow .25s,transform .25s}
-  .tool .ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(110,210,236,.14);color:var(--msp-sky);flex-shrink:0;transition:background .25s,color .25s}
-  .tool .ic svg{width:15px;height:15px}
-  .tool:hover,.tool:focus-visible{background:#fff;color:var(--msp-navy);border-color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.28);transform:translate(-50%,-50%) translateY(-2px);outline:none}
-  .tool:hover .ic,.tool:focus-visible .ic{background:var(--msp-navy);color:#fff}
-  .tool.soon{opacity:.45;cursor:default}
-  .tool.soon:hover{background:rgba(255,255,255,.055);color:#fff;border-color:rgba(255,255,255,.13);box-shadow:none;transform:translate(-50%,-50%)}
-  .tool.soon:hover .ic{background:rgba(110,210,236,.14);color:var(--msp-sky)}
-  .tool .tag{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-left:2px}
+  .h-tool .ic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(110,210,236,.14);color:var(--msp-sky);flex-shrink:0;transition:background .25s,color .25s}
+  .h-tool .ic svg{width:15px;height:15px}
+  .h-tool:hover,.h-tool:focus-visible{background:#fff;color:var(--msp-navy);border-color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.28);transform:translate(-50%,-50%) translateY(-2px);outline:none}
+  .h-tool:hover .ic,.h-tool:focus-visible .ic{background:var(--msp-navy);color:#fff}
+  .h-list{display:none}
+  .h-foot{display:flex;justify-content:space-between;gap:16px;padding:22px 44px 28px;font-size:11px;color:rgba(255,255,255,.38)}
+  .h-foot a{color:rgba(255,255,255,.6);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
+  body.home .h-tool{animation:hrise .6s cubic-bezier(.2,.7,.2,1) both}
+  @keyframes hrise{from{opacity:0;transform:translate(-50%,-38%)}to{opacity:1;transform:translate(-50%,-50%)}}
 
-  /* below 980px: no orbit, a clean list */
-  .list{display:none}
-  @media (max-width:980px){
-    .bar{padding:22px 22px}.bar .prog{display:none}
-    .foot{flex-direction:column;align-items:center;text-align:center;padding:24px 22px 32px}
-    .stage{flex-direction:column;min-height:0;padding:18px 0 8px}
-    .orbit,.tool.ring{display:none}
-    .core{width:auto;padding:0 22px;order:-1}
-    .core img{width:150px}
-    .core h1{font-size:26px}
-    .core .cap{display:none}
-    .list{display:grid;grid-template-columns:1fr;gap:8px;width:100%;max-width:520px;padding:28px 22px 0;box-sizing:border-box}
-    .list .tool{position:static;transform:none;white-space:normal;border-radius:14px;padding:12px 16px 12px 12px}
-    .list .tool:hover,.list .tool:focus-visible{transform:none}
-    .list .tool .txt{display:flex;flex-direction:column;gap:1px}
-    .list .tool .txt small{font-size:11.5px;font-weight:400;color:rgba(255,255,255,.55)}
-    .list .tool:hover .txt small{color:var(--msp-g5)}
-    .list .grp{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.4);margin:14px 4px 2px}
-    .list .grp:first-child{margin-top:0}
+  /* ── phone and small tablet ── */
+  .v3-top{display:none}
+  @media(max-width:900px){
+    .v3-top{display:flex;align-items:center;gap:10px;position:fixed;top:0;left:0;right:0;height:52px;padding:0 12px;background:var(--msp-navy);color:#fff;z-index:150;box-shadow:0 2px 12px rgba(1,27,60,.25)}
+    .v3-top button{width:36px;height:36px;border-radius:9px;border:0;background:rgba(255,255,255,.1);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+    .v3-top button svg{width:18px;height:18px}
+    .v3-top .t{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+    .v3-top .t small{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--msp-sky)}
+    .v3-top .t b{font-family:var(--msp-font-display);font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .v3-stage{left:0;top:52px}
+    body.home .v3-stage{left:100vw}
+    body.home .v3-top{display:none}
+    body.home .msp-sidebar{z-index:400}
+    .v3-collapse{display:none}
+    .v3-home{overflow-y:auto}
+    .h-bar{padding:22px}
+    .h-stage{flex:0 0 auto;flex-direction:column;padding:18px 0 8px}
+    .h-orbit,.h-tool.ring{display:none}
+    .h-core{width:auto;padding:0 22px}.h-core img{width:150px}.h-core h1{font-size:26px}.h-cap{display:none}
+    .h-list{display:grid;gap:8px;width:100%;max-width:520px;padding:26px 22px 0;box-sizing:border-box}
+    .h-list .h-tool{position:static;transform:none;white-space:normal;border-radius:14px;padding:12px 16px 12px 12px;animation:none}
+    .h-list .h-tool:hover{transform:none}
+    .h-list small{display:block;font-size:11.5px;font-weight:400;color:rgba(255,255,255,.55)}
+    .h-list .h-tool:hover small{color:var(--msp-g5)}
+    .h-foot{flex-direction:column;align-items:center;text-align:center;padding:24px 22px 32px}
   }
-  @media (prefers-reduced-motion:no-preference){
-    .tool.ring{animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
-    @keyframes rise{from{opacity:0;transform:translate(-50%,-40%)}to{opacity:1;transform:translate(-50%,-50%)}}
-    .tool.ring.soon{animation-name:riseSoon}
-    @keyframes riseSoon{from{opacity:0;transform:translate(-50%,-40%)}to{opacity:.45;transform:translate(-50%,-50%)}}
-  }
+  @media(prefers-reduced-motion:reduce){:root{--v3-t:.01s} body.home .h-tool{animation:none}}
 </style>
 </head>
-<body>
+<body class="msp-body home">
 
-<header class="bar">
-  <img src="msp-ui/um-wordmark.png" alt="Maastricht University">
-  <a class="switch" id="switch" href="#"></a>
+<aside class="msp-sidebar" id="msp-sidebar" aria-label="MSP tools">
+  <!-- the landing view -->
+  <div class="v3-home" id="home">
+    <header class="h-bar">
+      <img src="msp-ui/um-wordmark.png" alt="Maastricht University">
+      <a class="h-switch" id="homeSwitch" href="#"></a>
+    </header>
+    <div class="h-stage" id="hStage">
+      <svg class="h-orbit" id="hOrbit" aria-hidden="true"></svg>
+      <div class="h-core">
+        <div class="glow"></div>
+        <img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
+        <div class="h-kick" id="hKick"></div>
+        <h1 id="hName"></h1>
+        <div class="h-cap" id="hCap" aria-live="polite"></div>
+      </div>
+      <nav class="h-list" id="hList" aria-label="Tools"></nav>
+    </div>
+    <footer class="h-foot">
+      <span>Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University</span>
+      <span>Questions about a tool: <a href="mailto:msp-operations@maastrichtuniversity.nl">msp-operations@maastrichtuniversity.nl</a></span>
+    </footer>
+  </div>
+
+  <!-- the side nav -->
+  <div class="v3-side" id="side">
+    <div class="msp-sb-brand">
+      <a id="hubLogo" href="#" title="All tools"><img src="msp-ui/um-wordmark.png" alt="Maastricht University" class="msp-sb-logo"></a>
+      <div class="v3-kicker" id="kicker"></div>
+      <div class="v3-title" id="title"></div>
+    </div>
+    <nav class="msp-sb-nav" aria-label="Tools">
+      <button type="button" class="v3-collapse" id="collapseBtn" aria-controls="msp-sidebar"></button>
+      <div class="msp-sb-label">Tools</div>
+      <div id="toolNav"></div>
+      <div class="msp-sb-divider"></div>
+      <a class="msp-sb-link" id="hubLink" data-tip="All tools" href="#"><span class="msp-sb-ico" id="hubIco"></span><span class="msp-sb-text" id="hubText"></span></a>
+      <a class="msp-sb-link" id="otherLink" data-tip="Switch side" href="#"><span class="msp-sb-ico" id="otherIco"></span><span class="msp-sb-text" id="otherText"></span></a>
+    </nav>
+    <div class="msp-sb-meta v3-actions">
+      <span id="nowShowing"></span>
+      <a class="msp-sb-cfg" id="newTab" href="#" target="_blank" rel="noopener"></a>
+    </div>
+    <div class="msp-sb-footer">
+      <img class="msp-sb-emblem" src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
+      <div class="msp-sb-privacy">Each tool opens as its own website. Your place in a tool is kept while you switch.</div>
+    </div>
+  </div>
+</aside>
+<div class="msp-sb-overlay" id="overlay"></div>
+
+<header class="v3-top">
+  <button type="button" id="menuBtn" aria-label="Open the tool menu" aria-controls="msp-sidebar" aria-expanded="false"></button>
+  <div class="t"><small id="topKicker"></small><b id="topTitle"></b></div>
 </header>
 
-<main class="stage" id="stage">
-  <svg class="orbit" id="orbit" aria-hidden="true"></svg>
-  <div class="core">
-    <div class="glow"></div>
-    <img src="msp-ui/msp-emblem.png" alt="Maastricht Science Programme">
-    <div class="kicker" id="kicker"></div>
-    <h1>MSP Online</h1>
-    <div class="cap" id="cap" aria-live="polite"></div>
-  </div>
-  <nav class="list" id="list" aria-label="MSP tools"></nav>
+<main class="v3-stage" id="stage" aria-live="polite">
+  <div class="v3-bar" id="bar"></div>
 </main>
 
-<footer class="foot">
-  <span>Maastricht Science Programme · Faculty of Science and Engineering · Maastricht University</span>
-  <span>Questions about a tool: <a href="mailto:msp-operations@maastrichtuniversity.nl">msp-operations@maastrichtuniversity.nl</a></span>
-</footer>
-
-<script>window.MSP_HUB = 'students';</script>
-<script src="projects.js"></script>
+<script src="tools.js"></script>
 <script src="msp-ui/msp-shell.js"></script>
 <script>
 (function () {
-  var HUBKEY = window.MSP_HUB || 'students';
-  if (MSPShell.rememberSuite) MSPShell.rememberSuite(HUBKEY);
-  var HUB = (window.MSP_HUBS || {})[HUBKEY] || { title: '', line: '' };
-  var P = (window.MSP_PROJECTS || []).filter(function (p) { return (p.hubs || []).indexOf(HUBKEY) >= 0; });
-  document.getElementById('kicker').textContent = HUB.title;
-  document.getElementById('cap').textContent = HUB.line;
-  var sw = document.getElementById('switch'), other = (window.MSP_HUBS || {})[HUB.other];
-  if (other) { sw.href = other.file; sw.innerHTML = HUB.otherLabel + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'; } else { sw.remove(); }
-  function blurb(p) { return (HUBKEY === 'staff' && p.blurbStaff) || p.blurb; }
-  var stage = document.getElementById('stage'), svg = document.getElementById('orbit');
-  var cap = document.getElementById('cap'), list = document.getElementById('list');
-  var DEFAULT = cap.innerHTML;
+  var V = window.V3, I = MSPShell.icon;
+  var q = new URLSearchParams(location.search);
+  var key = q.get('s') === 'staff' ? 'staff' : 'students';
+  var S = V.suites[key], O = V.suites[S.other];
+  var tools = S.tools, frames = {}, current = null, atHome = true;
+  var $ = function (id) { return document.getElementById(id); };
+  var here = location.pathname.split('/').pop() || 'index.html';
+  var sideUrl = function (k) { return here + (k === 'staff' ? '?s=staff' : ''); };
+  var ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
 
-  function el(p, ring) {
-    var href = (HUBKEY === 'staff' && p.nextStaff) || p.next || p.live, soon = p.status === 'dev' || !href;
-    var a = document.createElement(soon ? 'span' : 'a');
-    a.className = 'tool' + (ring ? ' ring' : '') + (soon ? ' soon' : '');
-    if (!soon) a.href = href;
-    a.innerHTML = '<span class="ic">' + MSPShell.icon(p.icon) + '</span>' +
-      (ring ? '<span>' + p.name + '</span>' + (soon ? '<span class="tag">soon</span>' : '')
-            : '<span class="txt">' + p.name + (soon ? ' <span class="tag">soon</span>' : '') + '<small>' + blurb(p) + '</small></span>');
+  // ── side nav, static parts ──
+  $('kicker').textContent = V.name + ' · ' + S.label;
+  $('topKicker').textContent = V.name + ' · ' + S.label;
+  $('hubIco').innerHTML = I('hub');
+  $('hubText').innerHTML = 'All ' + S.one + ' tools<span class="msp-sb-hint">Back to the overview</span>';
+  $('otherLink').href = sideUrl(S.other);
+  $('otherIco').innerHTML = I(key === 'staff' ? 'gradcap' : 'briefcase');
+  $('otherText').innerHTML = S.otherLabel + '<span class="msp-sb-hint">Switch to the ' + O.label.toLowerCase() + ' side</span>';
+  $('menuBtn').innerHTML = I('menu');
+  $('toolNav').innerHTML = tools.map(function (t) {
+    return '<a class="msp-sb-link" data-id="' + t.id + '" data-tip="' + t.name + '" href="#' + t.id + '">' +
+      '<span class="msp-sb-ico">' + I(t.icon) + '</span>' +
+      '<span class="msp-sb-text">' + t.name + '<span class="msp-sb-hint">' + t.hint + '</span></span>' +
+      '<span class="v3-dot" title="Loaded in the background"></span></a>';
+  }).join('');
+
+  // ── landing view ──
+  $('homeSwitch').href = sideUrl(S.other);
+  $('homeSwitch').innerHTML = S.otherLabel + ' ' + ARROW;
+  $('hKick').textContent = S.title; $('hName').textContent = V.name; $('hCap').textContent = S.line;
+  function pill(t, ring) {
+    var a = document.createElement('a');
+    a.className = 'h-tool' + (ring ? ' ring' : ''); a.href = '#' + t.id;
+    a.innerHTML = '<span class="ic">' + I(t.icon) + '</span>' + (ring ? '<span>' + t.name + '</span>' : '<span>' + t.name + '<small>' + t.blurb + '</small></span>');
     if (ring) {
-      var show = function () { cap.innerHTML = '<b>' + p.name + '</b>' + blurb(p); };
-      var hide = function () { cap.innerHTML = DEFAULT; };
-      a.addEventListener('mouseenter', show); a.addEventListener('mouseleave', hide);
-      a.addEventListener('focus', show); a.addEventListener('blur', hide);
-      if (!soon) a.setAttribute('aria-label', p.name + ': ' + blurb(p));
+      var cap = $('hCap');
+      var on = function () { cap.innerHTML = '<b>' + t.name + '</b>' + t.blurb; };
+      var off = function () { cap.textContent = S.line; };
+      a.addEventListener('mouseenter', on); a.addEventListener('mouseleave', off);
+      a.addEventListener('focus', on); a.addEventListener('blur', off);
     }
     return a;
   }
-
-  // ring: tools spaced evenly on an ellipse around the emblem, first one at the top
-  var ringEls = P.map(function (p, i) {
-    var a = el(p, true); a.style.animationDelay = (0.05 * i) + 's'; stage.appendChild(a); return a;
-  });
-  function layout() {
-    var w = stage.clientWidth, h = stage.clientHeight, cx = w / 2, cy = h / 2;
+  var ringEls = tools.map(function (t, i) { var a = pill(t, true); a.style.animationDelay = (0.05 * i) + 's'; $('hStage').appendChild(a); return a; });
+  tools.forEach(function (t) { $('hList').appendChild(pill(t, false)); });
+  function layoutRing() {
+    var st = $('hStage'), w = st.clientWidth, h = st.clientHeight, cx = w / 2, cy = h / 2;
     var rx = Math.min(w * 0.40, 560), ry = Math.min(h * 0.40, 300);
-    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
-    svg.innerHTML =
+    $('hOrbit').setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    $('hOrbit').innerHTML =
       '<ellipse class="o3" cx="' + cx + '" cy="' + cy + '" rx="' + (rx * 1.18) + '" ry="' + (ry * 1.22) + '"/>' +
       '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"/>' +
       '<ellipse class="o2" cx="' + cx + '" cy="' + cy + '" rx="' + (rx * 0.62) + '" ry="' + (ry * 0.70) + '"/>';
     ringEls.forEach(function (a, i) {
       var t = -Math.PI / 2 + (2 * Math.PI * i) / ringEls.length;
-      a.style.left = (cx + rx * Math.cos(t)) + 'px';
-      a.style.top = (cy + ry * Math.sin(t)) + 'px';
+      a.style.left = (cx + rx * Math.cos(t)) + 'px'; a.style.top = (cy + ry * Math.sin(t)) + 'px';
     });
   }
-  layout(); window.addEventListener('resize', layout);
 
-  // narrow screens: a plain list
-  P.forEach(function (p) { list.appendChild(el(p, false)); });
+  // ── frames ──
+  var bar = $('bar'), barT;
+  function loading(on) {
+    clearTimeout(barT);
+    if (on) { bar.className = 'v3-bar'; void bar.offsetWidth; bar.className = 'v3-bar go'; }
+    else { bar.className = 'v3-bar go done'; barT = setTimeout(function () { bar.className = 'v3-bar'; }, 700); }
+  }
+  function frameFor(t, visible) {
+    if (frames[t.id]) return frames[t.id];
+    var f = document.createElement('iframe');
+    f.title = t.name; f.src = t.url; f.setAttribute('allow', 'clipboard-write; fullscreen');
+    f.addEventListener('load', function () {
+      f.dataset.ready = '1';
+      var a = document.querySelector('.msp-sb-link[data-id="' + t.id + '"]'); if (a) a.classList.add('loaded');
+      if (current === t.id && !atHome) loading(false);
+    });
+    $('stage').appendChild(f); frames[t.id] = f;
+    if (visible) loading(true);
+    return f;
+  }
+  // quietly load every tool in the background, one after the other, so each first click is instant
+  var warming = false;
+  function warm() {
+    if (warming) return; warming = true;
+    var queue = tools.filter(function (t) { return !frames[t.id]; });
+    (function next() {
+      var t = queue.shift(); if (!t) return;
+      if (frames[t.id]) return next();
+      frameFor(t, false).addEventListener('load', function () { setTimeout(next, 250); }, { once: true });
+    })();
+  }
+
+  // ── collapse to the icon rail (remembered); a tool with its own sidebar always gets the rail ──
+  var collapsed = false;
+  try { collapsed = localStorage.getItem('v3-collapsed') === '1'; } catch (e) {}
+  var PANEL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/>';
+  function applyRail() {
+    var t = tools.filter(function (x) { return x.id === current; })[0];
+    var forced = !!(t && t.ownNav), wide = window.innerWidth > 900;
+    document.body.classList.toggle('rail', !atHome && wide && (forced || collapsed));
+    document.body.classList.toggle('forced', forced);
+    var b = $('collapseBtn');
+    b.innerHTML = PANEL + (collapsed ? '<polyline points="13 9 16 12 13 15"/></svg><span>Expand menu</span>' : '<polyline points="16 9 13 12 16 15"/></svg><span>Collapse menu</span>');
+    b.setAttribute('data-tip', collapsed ? 'Expand menu' : 'Collapse menu');
+    b.setAttribute('aria-label', collapsed ? 'Expand the menu' : 'Collapse the menu');
+    b.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  }
+  $('collapseBtn').addEventListener('click', function () {
+    collapsed = !collapsed;
+    try { localStorage.setItem('v3-collapsed', collapsed ? '1' : '0'); } catch (e) {}
+    applyRail();
+  });
+
+  // ── the two states ──
+  function goHome() {
+    atHome = true;
+    document.body.classList.add('home');
+    applyRail();
+    document.title = V.name + (key === 'staff' ? ', for staff' : '');
+    closeMenu();
+    requestAnimationFrame(layoutRing);
+    setTimeout(warm, 900);
+  }
+  function show(id) {
+    var t = tools.filter(function (x) { return x.id === id; })[0];
+    if (!t) return goHome();
+    var wasHome = atHome;
+    atHome = false; current = t.id;
+    var had = frames[t.id], f = frameFor(t, !(had && had.dataset.ready));
+    if (f.dataset.ready) loading(false);
+    Object.keys(frames).forEach(function (k) { frames[k].classList.toggle('on', k === t.id); });
+    document.querySelectorAll('#toolNav .msp-sb-link').forEach(function (a) {
+      var on = a.getAttribute('data-id') === t.id;
+      a.classList.toggle('active', on); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+    $('title').textContent = t.name; $('topTitle').textContent = t.name;
+    document.title = t.name + ' · ' + V.name;
+    $('nowShowing').textContent = /^https?:/.test(t.url) ? 'Showing ' + t.url.replace(/^https?:\/\//, '').replace(/\/$/, '') : 'Original copy, not published yet';
+    $('newTab').href = t.url; $('newTab').innerHTML = I('external') + ' Open in a new tab';
+    document.body.classList.remove('home');
+    applyRail();
+    closeMenu();
+    if (wasHome) setTimeout(warm, 1200);
+  }
+
+  // ── phone drawer ──
+  var aside = $('msp-sidebar'), overlay = $('overlay');
+  function openMenu() { aside.classList.add('open'); overlay.classList.add('show'); $('menuBtn').setAttribute('aria-expanded', 'true'); $('menuBtn').innerHTML = I('x'); }
+  function closeMenu() { aside.classList.remove('open'); overlay.classList.remove('show'); $('menuBtn').setAttribute('aria-expanded', 'false'); $('menuBtn').innerHTML = I('menu'); }
+  $('menuBtn').addEventListener('click', function () { aside.classList.contains('open') ? closeMenu() : openMenu(); });
+  overlay.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+
+  function route() { var h = location.hash.slice(1); if (h) show(h); else goHome(); }
+  window.addEventListener('hashchange', route);
+  window.addEventListener('resize', function () { applyRail(); if (atHome) layoutRing(); });
+  // "All tools" links go home without leaving a '#' in the address
+  ['hubLogo', 'hubLink'].forEach(function (id) {
+    $(id).addEventListener('click', function (e) { e.preventDefault(); history.pushState(null, '', here + location.search); goHome(); });
+  });
+  window.addEventListener('popstate', route);
+  route();
 })();
 </script>
 </body>
