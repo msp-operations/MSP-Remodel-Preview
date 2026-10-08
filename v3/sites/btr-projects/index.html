@@ -1,0 +1,184 @@
+<!--
+  ============================================================================
+  index.html — LANDING PAGE
+  ============================================================================
+  This is the homepage of the site. It does only one thing: send visitors
+  to the right page. There are two big cards in the middle:
+    - "For supervisors" → submit.html (the project submission form)
+    (students browse projects on the BTR Dashboard, msp-btr.nl; projects.html is kept but no longer linked here)
+
+  Other pages on the site:
+    - submit.html   — supervisor form (only supervisors)
+    - projects.html — student catalog (only students)
+
+  Admin guide for adding new projects: see README.md in the repo root.
+
+  Only edit this file if you want to change the landing page text/styling.
+  ============================================================================
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTR Projects — Maastricht Science Programme</title>
+<meta name="description" content="The Bachelor Thesis Research project hub for the Maastricht Science Programme. Supervisors can submit projects; students can browse them.">
+<link rel="icon" type="image/png" href="msp-logo.png">
+<link rel="apple-touch-icon" href="msp-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#001C3D;
+    --accent:#00A2DB;
+    --ink:#0f1a2b;
+    --muted:#5b6472;
+    --line:#e3e6ec;
+    --bg:#ffffff;
+    --bg-soft:#f7f8fa;
+    --max:1100px;
+    --radius:8px;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Inter Tight',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--navy);text-decoration:none}
+
+  .topbar{border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(8px);background:rgba(255,255,255,.92)}
+  .topbar-inner{max-width:var(--max);margin:0 auto;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .logos{display:flex;align-items:center;gap:22px}
+  .logos img{display:block;height:44px;width:auto}
+  .logos .divider{width:1px;height:34px;background:var(--line)}
+  .topbar nav{font-size:13.5px;color:var(--muted);display:flex;gap:26px}
+  .topbar nav a{color:var(--muted);font-weight:500;letter-spacing:.01em}
+  .topbar nav a:hover{color:var(--navy)}
+
+  .hero{background:linear-gradient(180deg,#001C3D 0%, #002a55 100%);color:#fff;border-bottom:3px solid var(--accent);position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 85% 20%, rgba(0,162,219,.18), transparent 55%);pointer-events:none}
+  /* subtle scientific molecule pattern */
+  .hero svg.pattern{position:absolute;inset:0;width:100%;height:100%;opacity:.09;pointer-events:none}
+  .hero-inner{max-width:var(--max);margin:0 auto;padding:96px 28px 88px;position:relative;text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:600;color:var(--accent);margin-bottom:22px}
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(0,162,219,.18)}
+  .hero h1{font-family:var(--serif);font-weight:500;font-size:60px;line-height:1.05;margin:0 0 20px;letter-spacing:-.02em;font-variation-settings:"opsz" 144}
+  .hero h1 em{font-style:italic;color:var(--accent);font-weight:400}
+  .hero p.lead{max-width:640px;margin:0 auto 0;font-size:18px;color:#cfd6e1;line-height:1.6}
+
+  main{max-width:var(--max);margin:0 auto;padding:80px 28px 60px}
+  @media (max-width:760px){main{padding:56px 22px 40px}.hero h1{font-size:40px}.hero-inner{padding:64px 22px 60px}}
+
+  .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:760px){.choice-grid{grid-template-columns:1fr}}
+  .choice{display:block;border:1px solid var(--line);border-radius:14px;padding:36px 32px;background:#fff;transition:all .2s;position:relative;overflow:hidden}
+  .choice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform .25s}
+  .choice:hover{border-color:#cdd3dc;transform:translateY(-3px);box-shadow:0 14px 40px -18px rgba(0,28,61,.25)}
+  .choice:hover::before{transform:scaleY(1)}
+  .choice .ico{width:52px;height:52px;border-radius:12px;background:#f0f8fc;color:var(--accent);display:grid;place-items:center;margin-bottom:22px}
+  .choice .ico svg{width:26px;height:26px}
+  .choice h2{font-family:var(--serif);font-weight:500;font-size:26px;color:var(--navy);margin:0 0 10px;letter-spacing:-.01em}
+  .choice p{margin:0 0 22px;color:#4b5563;font-size:14.5px;line-height:1.6}
+  .choice .arrow{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--navy);letter-spacing:.01em}
+  .choice .arrow svg{width:14px;height:14px;transition:transform .2s}
+  .choice:hover .arrow svg{transform:translateX(4px)}
+  .choice:hover .arrow{color:var(--accent)}
+
+  .strip{max-width:var(--max);margin:24px auto 0;padding:0 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  @media (max-width:760px){.strip{grid-template-columns:repeat(2,1fr);padding:0 22px}}
+  .stat{text-align:center;padding:22px 8px;border-top:1px solid var(--line)}
+  .stat .num{font-family:var(--serif);font-size:34px;font-weight:500;color:var(--navy);line-height:1;display:block;margin-bottom:6px}
+  .stat .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+
+  footer{background:var(--navy);color:#cfd6e1;border-top:3px solid var(--accent);margin-top:80px}
+  .footer-inner{max-width:var(--max);margin:0 auto;padding:38px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .footer-inner img{height:38px;width:auto;filter:brightness(0) invert(1);opacity:.95}
+  .footer-inner .contact{font-size:14px}
+  .footer-inner .contact a{color:#fff;text-decoration:underline}
+  .footer-inner .copy{font-size:12px;color:#8a93a3}
+
+  /* footer always at the bottom, also on short pages */
+  body{min-height:100vh;display:flex;flex-direction:column}
+  body>main{flex:1 0 auto;width:100%;box-sizing:border-box}
+  body>footer{margin-top:0!important}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="index.html" class="logos" aria-label="Home">
+      <img src="maastricht-university-logo.png" alt="Maastricht University">
+      <span class="divider"></span>
+      <img src="msp-logo.png" alt="Maastricht Science Programme">
+    </a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="submit.html">For Supervisors</a>
+      <a href="mailto:msp-btr@maastrichtuniversity.nl">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <!-- subtle molecular / lattice pattern -->
+  <svg class="pattern" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="hex" width="80" height="70" patternUnits="userSpaceOnUse">
+        <polygon points="40,2 76,22 76,52 40,72 4,52 4,22" fill="none" stroke="#00A2DB" stroke-width="1"/>
+        <circle cx="40" cy="2" r="2" fill="#00A2DB"/>
+        <circle cx="76" cy="22" r="2" fill="#00A2DB"/>
+        <circle cx="76" cy="52" r="2" fill="#00A2DB"/>
+        <circle cx="40" cy="72" r="2" fill="#00A2DB"/>
+        <circle cx="4" cy="22" r="2" fill="#00A2DB"/>
+        <circle cx="4" cy="52" r="2" fill="#00A2DB"/>
+      </pattern>
+    </defs>
+    <rect width="1200" height="600" fill="url(#hex)"/>
+  </svg>
+  <div class="hero-inner">
+    <div class="eyebrow"><span class="dot"></span> Bachelor Thesis Research · Maastricht Science Programme</div>
+    <h1>Bachelor Thesis<br>Research <em>Projects</em></h1>
+    <p class="lead">Offer a research project to students of the Maastricht Science Programme for their Bachelor Thesis Research.</p>
+  </div>
+</section>
+
+<main>
+  <div class="choice-grid">
+    <a class="choice" href="submit.html">
+      <div class="ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M9 15h6"/></svg>
+      </div>
+      <h2>For supervisors</h2>
+      <p>Propose a new BTR project for MSP students. A short, structured form sends your proposal directly to the BTR office.</p>
+      <span class="arrow">Submit a project
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+
+    <a class="choice" href="mailto:msp-btr@maastrichtuniversity.nl">
+      <div class="ico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h2>Questions?</h2>
+      <p>Not sure whether your project fits the BTR, or how supervision works? The BTR office is happy to help.</p>
+      <span class="arrow">msp-btr@maastrichtuniversity.nl
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </span>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <img src="msp-logo.png" alt="Maastricht Science Programme">
+    <div class="contact">For any questions, contact <a href="mailto:msp-btr@maastrichtuniversity.nl">msp-btr@maastrichtuniversity.nl</a></div>
+    <div class="copy">© Maastricht Science Programme</div>
+  </div>
+</footer>
+
+</body>
+</html>

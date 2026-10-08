@@ -34,7 +34,7 @@ window.V3 = {
         { id: 'tutoring',          name: 'Tutor Registration', icon: 'users',     hint: 'Tutorial groups',
           blurb: 'Claim the tutorial groups you want to teach; the office allocates from here.', url: 'https://msp-tutoring.nl/' },
         { id: 'btr-projects',      name: 'BTR Projects',       icon: 'briefcase', hint: 'Offer a thesis project',
-          blurb: 'Offer a Bachelor Thesis Research project to MSP students.', url: 'https://beebzoo.github.io/BTR-Projects/' }
+          blurb: 'Offer a Bachelor Thesis Research project to MSP students.', url: 'sites/btr-projects/', note: 'Pending change, not on the live site yet' }
       ]
     }
   }
