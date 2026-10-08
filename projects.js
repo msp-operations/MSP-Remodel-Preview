@@ -34,7 +34,7 @@ window.MSP_PROJECTS = [
 
   { id: 'calendar', name: 'Academic Calendar',  hubs: ['staff'],             icon: 'clock',     live: 'https://msp-operations.github.io/MSP-Remodel-Preview/academic-calendar/', next: 'academic-calendar/', status: 'live',
     blurb: 'Every operational deadline per office and period, with Outlook feeds.' },
-  { id: 'exams',    name: 'Exams Office',       hubs: ['staff'],             icon: 'clipboard', live: 'https://msp-operations.github.io/MSP-Remodel-Preview/exams-office/', next: 'exams-office/', status: 'live',
+  { id: 'exams',    name: 'Exams Office',       hubs: [],                    icon: 'clipboard', live: 'https://msp-operations.github.io/MSP-Remodel-Preview/exams-office/', next: 'exams-office/', status: 'live',
     blurb: 'The exam coordinator manual: periods, checklists, procedures.' },
   { id: 'tutoring', name: 'Tutor Registration', hubs: ['staff'],             icon: 'users',     live: 'https://msp-operations.github.io/MSP-Remodel-Preview/tutoring/', next: 'tutoring/', status: 'live',
     blurb: 'Claim the tutorial groups you want to teach; the office allocates from here.' },

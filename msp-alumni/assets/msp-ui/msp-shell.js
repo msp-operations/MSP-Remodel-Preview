@@ -75,7 +75,6 @@
     staff: { label: 'Staff', one: 'staff', hub: 'staff.html', tools: [
       { slug: 'project-periods',   name: 'Project Periods',    icon: 'target' },
       { slug: 'academic-calendar', name: 'Academic Calendar',  icon: 'clock' },
-      { slug: 'exams-office',      name: 'Exams Office',       icon: 'clipboard' },
       { slug: 'tutoring',          name: 'Tutor Registration', icon: 'users' },
       { slug: 'btr-projects',      name: 'BTR for Supervisors', icon: 'briefcase' } ] }
   };
