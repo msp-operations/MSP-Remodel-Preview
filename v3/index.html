@@ -175,6 +175,22 @@
   }
   @media(min-width:901px) and (max-width:1240px){ .v3-tab span{display:none} .v3-tab{padding:0 11px} .v3-topnav .tb-brand b{display:none} }
 
+  /* ── staff gate: the staff side asks for the staff password (keeps students out by default; not real security) ── */
+  .v3-gate{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;padding:20px;
+    background:radial-gradient(ellipse 120% 90% at 50% 0%, #0A3060 0%, #02274F 38%, #011B3C 75%)}
+  .v3-gate.show{display:flex}
+  .v3-gate.over{background:rgba(1,27,60,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .v3-gate form{width:100%;max-width:380px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:28px 28px 24px;color:var(--msp-g9);text-align:center}
+  .v3-gate img{width:64px;height:64px;filter:brightness(0) saturate(100%) invert(9%) sepia(43%) saturate(3000%) hue-rotate(200deg)}
+  .v3-gate h2{font-family:var(--msp-font-display);font-size:20px;margin:12px 0 4px}
+  .v3-gate p{font-size:13.5px;color:var(--msp-g5);margin:0 0 16px;line-height:1.55}
+  .v3-gate input{width:100%;box-sizing:border-box;height:44px;border:1.5px solid var(--msp-g2);border-radius:10px;padding:0 14px;font:500 15px var(--msp-font);color:var(--msp-g9)}
+  .v3-gate input:focus{outline:2px solid var(--msp-focus);outline-offset:1px;border-color:var(--msp-navy)}
+  .v3-gate .err{min-height:18px;font-size:12.5px;color:var(--msp-err);margin:6px 0 4px}
+  .v3-gate .row{display:flex;gap:10px;justify-content:center;margin-top:6px}
+  .v3-gate .shake{animation:gshake .35s}
+  @keyframes gshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
   /* ── phone and small tablet ── */
   .v3-top{display:none}
   @media(max-width:900px){
@@ -273,6 +289,16 @@
   </div>
 </aside>
 <div class="msp-sb-overlay" id="overlay"></div>
+<div class="v3-gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <form id="gateForm" autocomplete="off">
+    <img src="msp-ui/msp-emblem-white.png" alt="">
+    <h2 id="gateTitle">Staff tools</h2>
+    <p>This side is for MSP support and academic staff. Enter the staff password to continue.</p>
+    <input type="password" id="gatePw" placeholder="Staff password" aria-label="Staff password" autocomplete="current-password">
+    <div class="err" id="gateErr" aria-live="polite"></div>
+    <div class="row"><button type="submit" class="msp-btn msp-btn-or">Continue</button><a class="msp-btn msp-btn-gh" id="gateBack" href="index.html">Back to student tools</a></div>
+  </form>
+</div>
 
 <header class="v3-top">
   <button type="button" id="menuBtn" aria-label="Open the tool menu" aria-controls="msp-sidebar" aria-expanded="false"></button>
@@ -294,6 +320,42 @@
   var q = new URLSearchParams(location.search);
   var key = q.get('s') === 'staff' ? 'staff' : 'students';
   var S = V.suites[key], O = V.suites[S.other];
+  // ── staff gate (9 Oct 2026). The password is only stored as a SHA-256 hash. This keeps students from
+  //    wandering into the staff side; it is NOT access control: the staff tools stay public at their own addresses.
+  var STAFF_HASH = '837ba9cd1ddb2919d0d5e8122b4dd5b68c74e1e6a618bdd002bd11889cbef180';
+  function staffOk() { try { return localStorage.getItem('v3-staff') === STAFF_HASH; } catch (e) { return false; } }
+  function sha256(t) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)).then(function (b) {
+      return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+    });
+  }
+  var gateTarget = null;
+  function openGate(target, overlay) {
+    gateTarget = target;
+    var g = document.getElementById('gate');
+    g.classList.add('show'); g.classList.toggle('over', !!overlay);
+    document.getElementById('gateErr').textContent = '';
+    setTimeout(function () { document.getElementById('gatePw').focus(); }, 30);
+  }
+  document.getElementById('gateForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = document.getElementById('gatePw').value.trim();
+    sha256(pw).then(function (h) {
+      if (h === STAFF_HASH) {
+        try { localStorage.setItem('v3-staff', h); } catch (x) {}
+        if (gateTarget) location.href = gateTarget; else document.getElementById('gate').classList.remove('show');
+      } else {
+        var f = document.getElementById('gateForm'), err = document.getElementById('gateErr');
+        err.textContent = 'That is not the staff password.';
+        f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake');
+        document.getElementById('gatePw').select();
+      }
+    });
+  });
+  document.getElementById('gateBack').addEventListener('click', function (e) {
+    if (key !== 'staff') { e.preventDefault(); document.getElementById('gate').classList.remove('show'); }
+  });
+  if (key === 'staff' && !staffOk()) openGate(null, false);
   var tools = S.tools, frames = {}, current = null, atHome = true;
   var $ = function (id) { return document.getElementById(id); };
   var here = location.pathname.split('/').pop() || 'index.html';
@@ -457,8 +519,8 @@
   });
 
   // ── menu on the side or at the top (remembered) ──
-  var layoutTop = false;
-  try { layoutTop = localStorage.getItem('v3-layout') === 'top'; } catch (e) {}
+  var layoutTop = true;   // default since 9 Oct 2026: menu at the top
+  try { layoutTop = localStorage.getItem('v3-layout') !== 'side'; } catch (e) {}
   var ICO_TOP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>';
   var ICO_SIDE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/></svg>';
   $('layoutBtn').innerHTML = ICO_TOP + '<span>Menu at the top</span>';
@@ -537,6 +599,12 @@
     $(id).addEventListener('click', function (e) { e.preventDefault(); history.pushState(null, '', here + location.search); goHome(); });
   });
   window.addEventListener('popstate', route);
+  if (key !== 'staff') ['otherLink', 'tbOther', 'homeSwitch'].forEach(function (id) {
+    $(id).addEventListener('click', function (e) {
+      if (staffOk()) return;
+      e.preventDefault(); openGate($(id).href, true);
+    });
+  });
   var initial = true;
   applyLayout();
   setRowVars();
